@@ -1,0 +1,64 @@
+{
+  "hero": {
+    "title": "Get a Quote for Your Private Charter Flight or Air Tour",
+    "subtitle": "The easiest, most relaxing, and beautiful way of exploring and traveling in the Riviera Maya, Mexico and Central America"
+  },
+  "flyAndDive": {
+    "title": "Fly and Dive",
+    "description": "Discover our brand-new fly and dive package!",
+    "cta": "Learn more about this unique package that combines the excitement of flying with the adventure of exploring the underwater world of the Riviera Maya.",
+    "button": "MORE ABOUT THE PACKAGE"
+  },
+  "airTours": {
+    "title": "Vuelatour Air Tours",
+    "subtitle1": "A completely personalized experience",
+    "description1": "Carry out your custom tour with us. We design each flight according to your preferences and schedules.",
+    "subtitle2": "An unforgettable panoramic air trip",
+    "description2": "Enjoy spectacular views from our Cessna 206 and Kodiak aircraft. Each flight is a unique experience over the most beautiful landscapes of the Riviera Maya.",
+    "cta": "Carry out your custom tour with us"
+  },
+  "charterFlights": {
+    "title": "Private charter flights",
+    "description": "Private charter flights are a safe, fast and uncomplicated way to travel. Our airplanes have a capacity of up to 8 passengers.",
+    "features": {
+      "safe": "Safe, fast and uncomplicated",
+      "national": "National and international private flights",
+      "fleet": "4 airplanes: Cessna, Seneca, Embla, Kodiak",
+      "capacity": "Capacity up to 8 passengers"
+    },
+    "map": {
+      "title": "Our Maya World Flight Area"
+    },
+    "cta": {
+      "title": "Ask us for our destinations!",
+      "description": "We fly to more than 50 destinations in Mexico, USA and Central America. Your destination is just one flight away.",
+      "button": "GET A QUOTE FOR YOUR PRIVATE CHARTER FLIGHT"
+    }
+  },
+  "whyChoose": {
+    "title": "Why choose Vuelatour?",
+    "reason1": {
+      "title": "Local Pilots with more than 15 years of experience",
+      "description": "Our pilots know every corner of the region. Professionalism, safety and local knowledge guaranteed."
+    },
+    "reason2": {
+      "title": "15 years of experience",
+      "description": "We are pioneers in the charter and air tour business in Cancun. Thousands of satisfied passengers support us."
+    },
+    "reason3": {
+      "title": "Excellence",
+      "description": "We have the best pilots in the area. International certifications and superior quality standards."
+    }
+  },
+  "jetset": {
+    "title": "Your Private Ride to Cancún",
+    "from": "From $30 USD",
+    "services": {
+      "airport": "Airport ↔ Hotel / Terminals",
+      "resort": "Resort & Beach Transfers",
+      "shopping": "Shopping & Tours"
+    },
+    "badge": "Safe • On-Time • 24/7 Service",
+    "button": "Book Now"
+  }
+}

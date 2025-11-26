@@ -1,0 +1,19 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "charterFlights": "Vuelos Charter",
+    "airTours": "Tours Aéreos",
+    "more": "Más",
+    "language": "Idioma"
+  },
+  "contact": {
+    "phone": "(998) 740 7149",
+    "email": "info@vuelatour.com",
+    "address": "Calle 1 Aeropuerto Cancún, 77569 Cancún, Q.R."
+  },
+  "footer": {
+    "terms": "Términos y Condiciones",
+    "privacy": "Políticas de Privacidad",
+    "rights": "Todos los derechos reservados"
+  }
+}
