@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Bars3Icon,
   XMarkIcon,
-  ChevronDownIcon,
   PhoneIcon,
   EnvelopeIcon,
+  GlobeAltIcon,
 } from '@heroicons/react/24/outline';
 import {
   FaFacebook,
@@ -20,10 +21,19 @@ import {
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const changeLanguage = (newLocale: string) => {
     const path = pathname.split('/').slice(2).join('/');
@@ -31,217 +41,221 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full">
-      {/* Top Red Bar */}
-      <div className="bg-primary-red text-white py-2">
+    <header className="w-full fixed top-0 z-50">
+      {/* Top Bar - Glassmorphism */}
+      <motion.div
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`transition-all duration-300 ${
+          scrolled
+            ? 'bg-primary-red/95 backdrop-blur-md'
+            : 'bg-gradient-to-r from-primary-red via-primary-red to-red-600'
+        }`}
+      >
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center text-sm">
+          <div className="flex justify-between items-center py-2.5">
             {/* Social Icons */}
-            <div className="flex gap-4">
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <FaFacebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <FaInstagram className="w-5 h-5" />
-              </a>
-              <a
-                href="https://tiktok.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-80 transition-opacity"
-              >
-                <FaTiktok className="w-5 h-5" />
-              </a>
+            <div className="flex gap-3">
+              {[
+                { icon: FaFacebook, href: 'https://facebook.com' },
+                { icon: FaInstagram, href: 'https://instagram.com' },
+                { icon: FaTiktok, href: 'https://tiktok.com' },
+              ].map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="text-white/90 hover:text-white transition-colors"
+                >
+                  <social.icon className="w-4 h-4" />
+                </motion.a>
+              ))}
             </div>
 
             {/* Contact Info */}
-            <div className="hidden md:flex items-center gap-6">
-              <a
+            <div className="hidden md:flex items-center gap-6 text-white/90 text-sm">
+              <motion.a
                 href="https://wa.me/5219987407149"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center gap-2 hover:text-white transition-colors"
               >
-                <FaWhatsapp className="w-5 h-5" />
+                <FaWhatsapp className="w-4 h-4" />
                 <span>WhatsApp</span>
-              </a>
+              </motion.a>
               <a
                 href="tel:+529987407149"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                className="flex items-center gap-2 hover:text-white transition-colors"
               >
-                <PhoneIcon className="w-5 h-5" />
+                <PhoneIcon className="w-4 h-4" />
                 <span>{t('contact.phone')}</span>
               </a>
               <a
                 href="mailto:info@vuelatour.com"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                className="flex items-center gap-2 hover:text-white transition-colors"
               >
-                <EnvelopeIcon className="w-5 h-5" />
+                <EnvelopeIcon className="w-4 h-4" />
                 <span>{t('contact.email')}</span>
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Main Navigation */}
-      <nav className="bg-white shadow-md sticky top-0 z-50">
+      {/* Main Navigation - Premium Glassmorphism */}
+      <nav
+        className={`transition-all duration-500 ${
+          scrolled
+            ? 'bg-white/90 backdrop-blur-2xl shadow-xl border-b border-gray-200/60'
+            : 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-gray-100/50'
+        }`}
+      >
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
-            <Link href={`/${locale}`} className="flex items-center">
-              <span className="text-3xl font-heading font-bold text-primary-dark tracking-tight">
-                vuelat
-                <span className="relative">
-                  o
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary-red rounded-full"></span>
-                </span>
-                ur
-              </span>
+            <Link href={`/${locale}`}>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="flex items-center gap-2"
+              >
+                <div className="relative">
+                  <span className="text-3xl font-heading font-bold bg-gradient-to-r from-primary-dark via-primary-red to-primary-dark bg-clip-text text-transparent">
+                    vuelatour
+                  </span>
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [1, 0.8, 1]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                    className="absolute -top-1 -right-2 w-2.5 h-2.5 bg-primary-red rounded-full shadow-lg shadow-primary-red/50"
+                  />
+                </div>
+              </motion.div>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
-              <Link
-                href={`/${locale}`}
-                className="text-primary-gray hover:text-primary-red transition-colors font-medium"
-              >
-                {t('nav.home')}
-              </Link>
+              {[
+                { label: t('nav.home'), href: `/${locale}` },
+                { label: t('nav.charterFlights'), href: `/${locale}/charter-flights` },
+                { label: t('nav.airTours'), href: `/${locale}/air-tours` },
+              ].map((item, index) => (
+                <motion.div key={index} whileHover={{ y: -2 }}>
+                  <Link
+                    href={item.href}
+                    className="relative text-primary-gray hover:text-primary-red transition-colors font-medium group"
+                  >
+                    {item.label}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-red to-red-600 group-hover:w-full transition-all duration-300" />
+                  </Link>
+                </motion.div>
+              ))}
 
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-primary-gray hover:text-primary-red transition-colors font-medium">
-                  {t('nav.charterFlights')}
-                  <ChevronDownIcon className="w-4 h-4" />
-                </button>
-                {/* Dropdown menu can be added here */}
-              </div>
-
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-primary-gray hover:text-primary-red transition-colors font-medium">
-                  {t('nav.airTours')}
-                  <ChevronDownIcon className="w-4 h-4" />
-                </button>
-                {/* Dropdown menu can be added here */}
-              </div>
-
-              <div className="relative group">
-                <button className="flex items-center gap-1 text-primary-gray hover:text-primary-red transition-colors font-medium">
-                  {t('nav.more')}
-                  <ChevronDownIcon className="w-4 h-4" />
-                </button>
-                {/* Dropdown menu can be added here */}
-              </div>
-
-              {/* Language Switcher - Visible Buttons */}
-              <div className="flex items-center gap-2 border-l pl-4">
-                <button
-                  onClick={() => changeLanguage('es')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
-                    locale === 'es'
-                      ? 'bg-primary-red text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="text-xl">🇲🇽</span>
-                  <span>ES</span>
-                </button>
-                <button
-                  onClick={() => changeLanguage('en')}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
-                    locale === 'en'
-                      ? 'bg-primary-red text-white shadow-md'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="text-xl">🇺🇸</span>
-                  <span>EN</span>
-                </button>
+              {/* Language Switcher - Modern Pills */}
+              <div className="flex items-center gap-2 ml-4 pl-4 border-l border-gray-200">
+                <GlobeAltIcon className="w-5 h-5 text-gray-400" />
+                <div className="flex gap-1 bg-gray-100 p-1 rounded-full">
+                  {['es', 'en'].map((lang) => (
+                    <motion.button
+                      key={lang}
+                      onClick={() => changeLanguage(lang)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${
+                        locale === lang
+                          ? 'bg-gradient-to-r from-primary-red to-red-600 text-white shadow-md'
+                          : 'text-gray-600 hover:text-primary-red'
+                      }`}
+                    >
+                      {lang.toUpperCase()}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Mobile menu button */}
-            <button
+            <motion.button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2"
+              whileTap={{ scale: 0.95 }}
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               {mobileMenuOpen ? (
-                <XMarkIcon className="w-6 h-6" />
+                <XMarkIcon className="w-6 h-6 text-primary-dark" />
               ) : (
-                <Bars3Icon className="w-6 h-6" />
+                <Bars3Icon className="w-6 h-6 text-primary-dark" />
               )}
-            </button>
+            </motion.button>
           </div>
 
           {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t">
-              <div className="flex flex-col gap-4">
-                <Link
-                  href={`/${locale}`}
-                  className="text-primary-gray hover:text-primary-red transition-colors font-medium py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.home')}
-                </Link>
-                <Link
-                  href={`/${locale}/charter-flights`}
-                  className="text-primary-gray hover:text-primary-red transition-colors font-medium py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.charterFlights')}
-                </Link>
-                <Link
-                  href={`/${locale}/air-tours`}
-                  className="text-primary-gray hover:text-primary-red transition-colors font-medium py-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.airTours')}
-                </Link>
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="md:hidden overflow-hidden border-t border-gray-200"
+              >
+                <div className="py-4 space-y-2">
+                  {[
+                    { label: t('nav.home'), href: `/${locale}` },
+                    { label: t('nav.charterFlights'), href: `/${locale}/charter-flights` },
+                    { label: t('nav.airTours'), href: `/${locale}/air-tours` },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={item.href}
+                        className="block px-4 py-3 rounded-lg text-primary-gray hover:text-primary-red hover:bg-red-50 transition-all font-medium"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  ))}
 
-                <div className="flex gap-3 pt-4 border-t">
-                  <button
-                    onClick={() => {
-                      changeLanguage('es');
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                      locale === 'es'
-                        ? 'bg-primary-red text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <span className="text-xl">🇲🇽</span>
-                    <span>Español</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      changeLanguage('en');
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                      locale === 'en'
-                        ? 'bg-primary-red text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <span className="text-xl">🇺🇸</span>
-                    <span>English</span>
-                  </button>
+                  <div className="flex gap-2 pt-4 px-4">
+                    {[
+                      { lang: 'es', flag: '🇲🇽', label: 'Español' },
+                      { lang: 'en', flag: '🇺🇸', label: 'English' }
+                    ].map((item) => (
+                      <motion.button
+                        key={item.lang}
+                        onClick={() => {
+                          changeLanguage(item.lang);
+                          setMobileMenuOpen(false);
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${
+                          locale === item.lang
+                            ? 'bg-gradient-to-r from-primary-red to-red-600 text-white shadow-md'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        <span className="text-lg">{item.flag}</span>
+                        <span className="text-sm">{item.label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </nav>
     </header>

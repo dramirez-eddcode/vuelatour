@@ -1,7 +1,22 @@
 {
   "hero": {
     "title": "Solicita una Cotización para tu Vuelo Charter Privado o Tour Aéreo",
-    "subtitle": "La forma más fácil, relajante y hermosa de explorar y viajar por la Riviera Maya, México y Centroamérica"
+    "subtitle": "La forma más fácil, relajante y hermosa de explorar y viajar por la Riviera Maya, México y Centroamérica",
+    "badge": "Experiencia Premium en el Aire",
+    "description": "Descubre el Caribe desde una perspectiva única con nuestros tours y vuelos charter de lujo.",
+    "cta": {
+      "primary": "Reservar Ahora",
+      "secondary": "Ver Tours"
+    },
+    "stats": {
+      "years": "Años de Experiencia",
+      "flights": "Vuelos Realizados",
+      "satisfaction": "Satisfacción"
+    },
+    "card": {
+      "label": "Próximo Vuelo",
+      "value": "Disponible Hoy"
+    }
   },
   "flyAndDive": {
     "title": "Fly and Dive",

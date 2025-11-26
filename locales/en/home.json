@@ -1,7 +1,22 @@
 {
   "hero": {
     "title": "Get a Quote for Your Private Charter Flight or Air Tour",
-    "subtitle": "The easiest, most relaxing, and beautiful way of exploring and traveling in the Riviera Maya, Mexico and Central America"
+    "subtitle": "The easiest, most relaxing, and beautiful way of exploring and traveling in the Riviera Maya, Mexico and Central America",
+    "badge": "Premium Air Experience",
+    "description": "Discover the Caribbean from a unique perspective with our luxury tours and charter flights.",
+    "cta": {
+      "primary": "Book Now",
+      "secondary": "View Tours"
+    },
+    "stats": {
+      "years": "Years Experience",
+      "flights": "Flights Completed",
+      "satisfaction": "Satisfaction"
+    },
+    "card": {
+      "label": "Next Flight",
+      "value": "Available Today"
+    }
   },
   "flyAndDive": {
     "title": "Fly and Dive",
