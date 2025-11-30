@@ -8,18 +8,66 @@ import {
   PhoneIcon,
   EnvelopeIcon,
 } from '@heroicons/react/24/outline';
-import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from 'react-icons/fa';
+import { getYearsOfExperienceFormatted } from '@/lib/constants';
 
-export default function Footer() {
+interface ContactInfo {
+  address_es?: string;
+  address_en?: string;
+  phone?: string;
+  phone_link?: string;
+  email?: string;
+  whatsapp_number?: string;
+  facebook_url?: string;
+  instagram_url?: string;
+  tiktok_url?: string;
+  youtube_url?: string;
+}
+
+interface FooterProps {
+  contactInfo?: ContactInfo | null;
+}
+
+export default function Footer({ contactInfo }: FooterProps) {
   const t = useTranslations();
   const locale = useLocale();
 
+  // Build social links array - only include if URL exists
   const socialLinks = [
-    { icon: FaFacebook, href: 'https://facebook.com', label: 'Facebook' },
-    { icon: FaInstagram, href: 'https://instagram.com', label: 'Instagram' },
-    { icon: FaTiktok, href: 'https://tiktok.com', label: 'TikTok' },
-    { icon: FaWhatsapp, href: 'https://wa.me/5219987407149', label: 'WhatsApp' },
-  ];
+    contactInfo?.facebook_url && {
+      icon: FaFacebook,
+      href: contactInfo.facebook_url,
+      label: 'Facebook',
+    },
+    contactInfo?.instagram_url && {
+      icon: FaInstagram,
+      href: contactInfo.instagram_url,
+      label: 'Instagram',
+    },
+    contactInfo?.tiktok_url && {
+      icon: FaTiktok,
+      href: contactInfo.tiktok_url,
+      label: 'TikTok',
+    },
+    contactInfo?.youtube_url && {
+      icon: FaYoutube,
+      href: contactInfo.youtube_url,
+      label: 'YouTube',
+    },
+    contactInfo?.whatsapp_number && {
+      icon: FaWhatsapp,
+      href: `https://wa.me/${contactInfo.whatsapp_number}`,
+      label: 'WhatsApp',
+    },
+  ].filter(Boolean) as { icon: typeof FaFacebook; href: string; label: string }[];
+
+  // Contact info with fallbacks
+  const address = locale === 'es'
+    ? (contactInfo?.address_es || 'Aeropuerto Internacional de Cancún, Terminal FBO, Cancún, Q.R., México')
+    : (contactInfo?.address_en || 'Cancún International Airport, FBO Terminal, Cancún, Q.R., Mexico');
+  const phone = contactInfo?.phone || '+52 998 740 7149';
+  const phoneLink = contactInfo?.phone_link || '+529987407149';
+  const email = contactInfo?.email || 'info@vuelatour.com';
 
   return (
     <footer className="border-t border-default">
@@ -46,23 +94,25 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-muted mb-6 max-w-xs">
-              {t('footer.description')}
+              {t('footer.description')} {getYearsOfExperienceFormatted()} {t('footer.yearsExperience')}.
             </p>
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg surface-muted flex items-center justify-center text-muted hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-950 transition-colors"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+            {/* Social Links - Only show if there are any */}
+            {socialLinks.length > 0 && (
+              <div className="flex gap-3">
+                {socialLinks.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 md:w-11 md:h-11 rounded-lg surface-muted flex items-center justify-center text-muted hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-950 transition-colors"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Services */}
@@ -116,6 +166,14 @@ export default function Footer() {
                   {t('footer.privacy')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={`/${locale}/cookies`}
+                  className="text-sm text-muted hover:text-foreground transition-colors"
+                >
+                  {t('footer.cookies')}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -125,24 +183,24 @@ export default function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPinIcon className="w-4 h-4 text-muted mt-0.5 flex-shrink-0" />
-                <span className="text-sm text-muted">{t('contact.address')}</span>
+                <span className="text-sm text-muted">{address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <PhoneIcon className="w-4 h-4 text-muted flex-shrink-0" />
                 <a
-                  href="tel:+529987407149"
+                  href={`tel:${phoneLink}`}
                   className="text-sm text-muted hover:text-foreground transition-colors"
                 >
-                  {t('contact.phone')}
+                  {phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <EnvelopeIcon className="w-4 h-4 text-muted flex-shrink-0" />
                 <a
-                  href="mailto:info@vuelatour.com"
+                  href={`mailto:${email}`}
                   className="text-sm text-muted hover:text-foreground transition-colors"
                 >
-                  {t('contact.email')}
+                  {email}
                 </a>
               </li>
             </ul>
@@ -165,10 +223,10 @@ export default function Footer() {
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                FAA Certified
+                TAI & TAN Certified
               </span>
               <span>•</span>
-              <span>15+ {t('footer.yearsExperience')}</span>
+              <span>{getYearsOfExperienceFormatted()} {t('footer.yearsExperience')}</span>
             </div>
           </div>
         </div>

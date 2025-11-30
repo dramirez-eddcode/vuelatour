@@ -1,27 +1,54 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { CheckCircleIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ExclamationCircleIcon, PaperAirplaneIcon, XMarkIcon } from '@heroicons/react/24/outline';
+
+interface SearchParams {
+  destination?: string;
+  tour?: string;
+  aircraft?: string;
+  price?: string;
+}
 
 interface ContactFormProps {
   locale: string;
+  searchParams?: SearchParams;
 }
 
-export default function ContactForm({ locale }: ContactFormProps) {
+export default function ContactForm({ locale, searchParams }: ContactFormProps) {
   const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  // Extract pre-selection info from URL params
+  const preSelectedDestination = searchParams?.destination;
+  const preSelectedTour = searchParams?.tour;
+  const preSelectedAircraft = searchParams?.aircraft;
+  const preSelectedPrice = searchParams?.price;
+
+  const hasPreSelection = preSelectedDestination || preSelectedTour;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    service_type: '',
-    destination: '',
+    service_type: preSelectedDestination ? 'charter' : preSelectedTour ? 'tour' : '',
+    destination: preSelectedDestination || preSelectedTour || '',
     message: '',
   });
+
+  // Update form when searchParams change
+  useEffect(() => {
+    if (preSelectedDestination || preSelectedTour) {
+      setFormData(prev => ({
+        ...prev,
+        service_type: preSelectedDestination ? 'charter' : 'tour',
+        destination: preSelectedDestination || preSelectedTour || '',
+      }));
+    }
+  }, [preSelectedDestination, preSelectedTour]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,7 +103,7 @@ export default function ContactForm({ locale }: ContactFormProps) {
     submit: locale === 'es' ? 'Enviar mensaje' : 'Send message',
     sending: locale === 'es' ? 'Enviando...' : 'Sending...',
     selectService: locale === 'es' ? 'Selecciona un servicio' : 'Select a service',
-    charter: locale === 'es' ? 'Vuelo Charter' : 'Charter Flight',
+    charter: locale === 'es' ? 'Vuelo Privado' : 'Charter Flight',
     tour: locale === 'es' ? 'Tour Aéreo' : 'Air Tour',
     general: locale === 'es' ? 'Consulta General' : 'General Inquiry',
     successTitle: locale === 'es' ? '¡Mensaje enviado!' : 'Message sent!',
@@ -84,6 +111,19 @@ export default function ContactForm({ locale }: ContactFormProps) {
       ? 'Gracias por contactarnos. Te responderemos en menos de 24 horas.'
       : 'Thank you for contacting us. We will respond within 24 hours.',
     sendAnother: locale === 'es' ? 'Enviar otro mensaje' : 'Send another message',
+    preSelectionTitle: locale === 'es' ? 'Tu selección' : 'Your selection',
+    preSelectionDestination: locale === 'es' ? 'Destino' : 'Destination',
+    preSelectionTour: locale === 'es' ? 'Tour' : 'Tour',
+    preSelectionAircraft: locale === 'es' ? 'Aeronave' : 'Aircraft',
+    preSelectionPrice: locale === 'es' ? 'Precio' : 'Price',
+    clearSelection: locale === 'es' ? 'Cambiar selección' : 'Change selection',
+  };
+
+  // Format slug to display name
+  const formatSlug = (slug: string) => {
+    return slug.split('-').map(word =>
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
   };
 
   if (success) {
@@ -106,6 +146,43 @@ export default function ContactForm({ locale }: ContactFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Pre-selection Card */}
+      {hasPreSelection && (
+        <div className="p-4 rounded-xl bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-brand-100 dark:bg-brand-900/50">
+                <PaperAirplaneIcon className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+              </div>
+              <div>
+                <p className="text-xs text-brand-600 dark:text-brand-400 font-medium mb-1">
+                  {labels.preSelectionTitle}
+                </p>
+                <p className="font-semibold text-foreground">
+                  {preSelectedDestination && formatSlug(preSelectedDestination)}
+                  {preSelectedTour && formatSlug(preSelectedTour)}
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-sm text-muted">
+                  {preSelectedAircraft && (
+                    <span>{labels.preSelectionAircraft}: <strong className="text-foreground">{preSelectedAircraft}</strong></span>
+                  )}
+                  {preSelectedPrice && (
+                    <span>{labels.preSelectionPrice}: <strong className="text-brand-600 dark:text-brand-400">${preSelectedPrice} USD</strong></span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <a
+              href={`/${locale}/contact`}
+              className="text-xs text-muted hover:text-brand-500 transition-colors flex items-center gap-1"
+            >
+              <XMarkIcon className="w-4 h-4" />
+              <span className="hidden sm:inline">{labels.clearSelection}</span>
+            </a>
+          </div>
+        </div>
+      )}
+
       {/* Name */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -163,12 +240,12 @@ export default function ContactForm({ locale }: ContactFormProps) {
           name="service_type"
           value={formData.service_type}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+          className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
         >
-          <option value="">{labels.selectService}</option>
-          <option value="charter">{labels.charter}</option>
-          <option value="tour">{labels.tour}</option>
-          <option value="general">{labels.general}</option>
+          <option value="" className="bg-white dark:bg-navy-900 text-foreground">{labels.selectService}</option>
+          <option value="charter" className="bg-white dark:bg-navy-900 text-foreground">{labels.charter}</option>
+          <option value="tour" className="bg-white dark:bg-navy-900 text-foreground">{labels.tour}</option>
+          <option value="general" className="bg-white dark:bg-navy-900 text-foreground">{labels.general}</option>
         </select>
       </div>
 

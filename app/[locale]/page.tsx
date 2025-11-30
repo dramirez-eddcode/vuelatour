@@ -1,7 +1,8 @@
 import HeroSection from '@/components/home/HeroSection';
-import ServicesSection from '@/components/home/ServicesSection';
+import LazyServicesWrapper from '@/components/home/LazyServicesWrapper';
 import { LocalBusinessSchema, ServiceSchema, OrganizationSchema } from '@/components/seo/SchemaMarkup';
 import { createClient } from '@/lib/supabase/server';
+import { getYearsOfExperienceFormatted } from '@/lib/constants';
 
 interface HomePageProps {
   params: Promise<{ locale: string }>;
@@ -24,6 +25,54 @@ export default async function HomePage({ params }: HomePageProps) {
     .select('*')
     .eq('is_active', true)
     .order('display_order', { ascending: true });
+
+  // Get most popular destination/tour based on contact requests
+  // Query contact_requests grouped by destination field to find the most requested
+  const { data: popularRequests } = await supabase
+    .from('contact_requests')
+    .select('destination, service_type')
+    .not('destination', 'is', null)
+    .not('destination', 'eq', '');
+
+  // Count occurrences and find the most popular
+  const destinationCounts: Record<string, { count: number; type: string }> = {};
+  (popularRequests || []).forEach((req) => {
+    if (req.destination) {
+      const slug = req.destination.toLowerCase().replace(/\s+/g, '-');
+      if (!destinationCounts[slug]) {
+        destinationCounts[slug] = { count: 0, type: req.service_type || 'charter' };
+      }
+      destinationCounts[slug].count++;
+    }
+  });
+
+  // Find the most popular slug
+  let mostPopularSlug: string | null = null;
+  let maxCount = 0;
+  let popularType = 'charter';
+  Object.entries(destinationCounts).forEach(([slug, data]) => {
+    if (data.count > maxCount) {
+      maxCount = data.count;
+      mostPopularSlug = slug;
+      popularType = data.type;
+    }
+  });
+
+  // Find the actual destination or tour that matches the most popular
+  let popularItem = null;
+  if (mostPopularSlug && maxCount >= 1) {
+    // Try to find in destinations first
+    popularItem = (destinations || []).find(
+      (d) => d.slug === mostPopularSlug || d.name_es.toLowerCase().includes(mostPopularSlug!) || d.name_en.toLowerCase().includes(mostPopularSlug!)
+    );
+    // If not found, try tours
+    if (!popularItem) {
+      popularItem = (tours || []).find(
+        (t) => t.slug === mostPopularSlug || t.name_es.toLowerCase().includes(mostPopularSlug!) || t.name_en.toLowerCase().includes(mostPopularSlug!)
+      );
+      if (popularItem) popularType = 'tour';
+    }
+  }
 
   // Fetch site content from Supabase
   const { data: content } = await supabase
@@ -78,8 +127,15 @@ export default async function HomePage({ params }: HomePageProps) {
       <OrganizationSchema locale={locale} />
 
       {/* Page Content */}
-      <HeroSection locale={locale} content={contentMap} heroImage={heroImage} />
-      <ServicesSection
+      <HeroSection
+        locale={locale}
+        content={contentMap}
+        heroImage={heroImage}
+        featuredTour={popularType === 'tour' && popularItem ? popularItem : (tours?.[0] || null)}
+        featuredDestination={popularType !== 'tour' && popularItem ? popularItem : (destinations?.[0] || null)}
+        hasPopularData={!!popularItem}
+      />
+      <LazyServicesWrapper
         locale={locale}
         destinations={destinations || []}
         tours={tours || []}
@@ -117,9 +173,10 @@ export async function generateMetadata({ params }: HomePageProps) {
     en: 'Vuelatour | Charter Flights & Air Tours in Cancún',
   };
 
+  const yearsExp = getYearsOfExperienceFormatted();
   const descriptions = {
-    es: 'Vuelos privados y tours aéreos panorámicos en Cancún y la Riviera Maya. Sobrevuela Tulum, Chichén Itzá, Cozumel y más. 15+ años de experiencia. Reserva hoy.',
-    en: 'Private charter flights and panoramic air tours in Cancún and the Riviera Maya. Fly over Tulum, Chichén Itzá, Cozumel and more. 15+ years experience. Book today.',
+    es: `Vuelos privados y tours aéreos panorámicos en Cancún y la Riviera Maya. Sobrevuela Tulum, Chichén Itzá, Cozumel y más. ${yearsExp} años de experiencia. Reserva hoy.`,
+    en: `Private charter flights and panoramic air tours in Cancún and the Riviera Maya. Fly over Tulum, Chichén Itzá, Cozumel and more. ${yearsExp} years experience. Book today.`,
   };
 
   return {

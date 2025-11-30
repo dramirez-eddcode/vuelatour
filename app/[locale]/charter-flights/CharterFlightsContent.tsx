@@ -11,7 +11,15 @@ import {
 } from '@heroicons/react/24/outline';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import LazySection from '@/components/ui/LazySection';
+
+interface AircraftPricing {
+  aircraft_name: string;
+  max_passengers: number;
+  price_usd: number;
+  notes_es: string;
+  notes_en: string;
+}
 
 interface Destination {
   id: string;
@@ -23,6 +31,17 @@ interface Destination {
   flight_time: string | null;
   price_from: number | null;
   image_url: string | null;
+  aircraft_pricing?: AircraftPricing[] | null;
+}
+
+// Get minimum passengers from the lowest priced aircraft option
+function getMinPassengers(aircraftPricing?: AircraftPricing[] | null): number {
+  if (!aircraftPricing || aircraftPricing.length === 0) return 5; // Default fallback
+  // Find the aircraft with the lowest price and return its max_passengers
+  const lowestPriced = aircraftPricing.reduce((min, current) =>
+    current.price_usd < min.price_usd ? current : min
+  );
+  return lowestPriced.max_passengers;
 }
 
 interface CharterFlightsContentProps {
@@ -36,7 +55,8 @@ const translations = {
     subtitle: 'Viaja a tu destino de forma privada y exclusiva',
     description: 'Ofrecemos vuelos privados a los destinos más espectaculares de la región. Despega desde Cancún y llega a tu destino en minutos, no en horas. Máximo confort, flexibilidad total.',
     backToHome: 'Volver al inicio',
-    passengers: 'Hasta 5 pasajeros',
+    passengersFrom: 'Desde',
+    passengersLabel: 'pasajeros',
     bookNow: 'Reservar ahora',
     noDestinations: 'No hay destinos disponibles',
     customTitle: '¿No encuentras tu destino?',
@@ -48,7 +68,8 @@ const translations = {
     subtitle: 'Travel to your destination privately and exclusively',
     description: 'We offer private charter flights to the most spectacular destinations in the region. Take off from Cancún and reach your destination in minutes, not hours. Maximum comfort, total flexibility.',
     backToHome: 'Back to home',
-    passengers: 'Up to 5 passengers',
+    passengersFrom: 'From',
+    passengersLabel: 'passengers',
     bookNow: 'Book now',
     noDestinations: 'No destinations available',
     customTitle: "Can't find your destination?",
@@ -81,7 +102,7 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
                 <PaperAirplaneIcon className="w-8 h-8 text-navy-600 dark:text-navy-300" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold">{t.title}</h1>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">{t.title}</h1>
                 <p className="text-lg text-muted mt-2">{t.subtitle}</p>
               </div>
             </div>
@@ -96,13 +117,17 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
         <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {destinations.map((dest) => (
-                <Link
+              {destinations.map((dest, index) => (
+                <LazySection
                   key={dest.id}
-                  href={`/${locale}/charter-flights/${dest.slug}`}
-                  className="group block"
+                  animation="slide-up"
+                  delay={index * 100}
                 >
-                  <article
+                  <Link
+                    href={`/${locale}/charter-flights/${dest.slug}`}
+                    className="group block"
+                  >
+                    <article
                     id={dest.slug}
                     className="h-full bg-white dark:bg-navy-900 rounded-3xl border border-navy-200 dark:border-navy-700 overflow-hidden hover:border-navy-400 dark:hover:border-navy-500 hover:shadow-xl hover:shadow-navy-100 dark:hover:shadow-navy-900/50 transition-all duration-300 scroll-mt-24"
                   >
@@ -111,7 +136,9 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
                       {dest.image_url ? (
                         <Image
                           src={dest.image_url}
-                          alt={locale === 'es' ? dest.name_es : dest.name_en}
+                          alt={locale === 'es'
+                            ? `Vuelo privado a ${dest.name_es} - Vuelatour Cancún`
+                            : `Private flight to ${dest.name_en} - Vuelatour Cancún`}
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -148,18 +175,19 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
                         </div>
                         <div className="flex items-center gap-2 text-muted">
                           <UserGroupIcon className="w-5 h-5 text-navy-400" />
-                          <span className="font-medium">{t.passengers}</span>
+                          <span className="font-medium">{t.passengersFrom} {getMinPassengers(dest.aircraft_pricing)} {t.passengersLabel}</span>
                         </div>
                       </div>
 
                       {/* CTA */}
-                      <div className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-navy-600 group-hover:bg-navy-700 text-white font-semibold rounded-xl transition-colors">
-                        <PhoneIcon className="w-4 h-4" />
-                        {t.bookNow}
+                        <div className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-navy-600 group-hover:bg-navy-700 text-white font-semibold rounded-xl transition-colors">
+                          <PhoneIcon className="w-4 h-4" />
+                          {t.bookNow}
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                </Link>
+                    </article>
+                  </Link>
+                </LazySection>
               ))}
             </div>
 
@@ -175,7 +203,7 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
         </section>
 
         {/* Bottom CTA */}
-        <section className="py-16 md:py-20 bg-gradient-to-r from-navy-900 to-navy-800">
+        <LazySection animation="fade" className="py-16 md:py-20 bg-gradient-to-r from-navy-900 to-navy-800">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
               {t.customTitle}
@@ -190,9 +218,8 @@ export default function CharterFlightsContent({ locale, destinations }: CharterF
               {t.requestQuote}
             </Link>
           </div>
-        </section>
+        </LazySection>
       </main>
-      <Footer />
     </>
   );
 }

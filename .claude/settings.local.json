@@ -3,7 +3,11 @@
     "allow": [
       "Bash(ls:*)",
       "Bash(del:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Add admin panel, SEO improvements, and project cleanup\n\n- Add complete admin panel with dashboard, destinations, tours, services, images, content management\n- Add dynamic services system with icon mapping for destinations and tours\n- Add SEO Schema Markup (LocalBusiness, Organization, Service, Tour, Breadcrumb, FAQ)\n- Add Vuelatour logo with full SEO metadata (alt text, aria-labels, JSON-LD)\n- Add public pages: charter-flights, air-tours, contact with detail views\n- Add currency context for USD/MXN formatting\n- Update hero badge to green color (\"Disponible hoy\")\n- Remove obsolete documentation files (.md, .sql)\n- Update CLAUDE.md with complete project documentation\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(dir /b 'c:\\Users\\Diego Rmz\\Documents\\Development\\vuelatour\\public\\images')",
+      "Bash(npm uninstall:*)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []

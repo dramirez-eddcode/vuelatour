@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import { getYearsOfExperienceFormatted, FOUNDING_YEAR } from '@/lib/constants';
 
 interface LocalBusinessSchemaProps {
   locale: string;
@@ -24,8 +25,8 @@ export function LocalBusinessSchema({ locale, heroImageUrl, fleetImageUrl }: Loc
     name: 'Vuelatour',
     alternateName: locale === 'es' ? 'Vuelatour Cancún' : 'Vuelatour Cancun',
     description: locale === 'es'
-      ? 'Vuelos privados y tours aéreos panorámicos en Cancún y la Riviera Maya. 15+ años de experiencia.'
-      : 'Private charter flights and panoramic air tours in Cancún and the Riviera Maya. 15+ years of experience.',
+      ? `Vuelos privados y tours aéreos panorámicos en Cancún y la Riviera Maya. ${getYearsOfExperienceFormatted()} años de experiencia.`
+      : `Private charter flights and panoramic air tours in Cancún and the Riviera Maya. ${getYearsOfExperienceFormatted()} years of experience.`,
     url: 'https://vuelatour.com',
     telephone: '+52-998-740-7149',
     email: 'info@vuelatour.com',
@@ -253,9 +254,9 @@ export function OrganizationSchema({ locale }: OrganizationSchemaProps) {
       height: 40,
     },
     description: locale === 'es'
-      ? 'Vuelatour es una empresa de aviación que ofrece vuelos privados charter y tours aéreos panorámicos en Cancún, Riviera Maya y toda la Península de Yucatán. Con más de 15 años de experiencia y certificación FAA.'
-      : 'Vuelatour is an aviation company offering private charter flights and panoramic air tours in Cancún, Riviera Maya, and the entire Yucatan Peninsula. With over 15 years of experience and FAA certification.',
-    foundingDate: '2010',
+      ? `Vuelatour es una empresa de aviación que ofrece vuelos privados charter y tours aéreos panorámicos en Cancún, Riviera Maya y toda la Península de Yucatán. Con más de ${getYearsOfExperienceFormatted()} años de experiencia y certificaciones TAI & TAN.`
+      : `Vuelatour is an aviation company offering private charter flights and panoramic air tours in Cancún, Riviera Maya, and the entire Yucatan Peninsula. With over ${getYearsOfExperienceFormatted()} years of experience and TAI & TAN certifications.`,
+    foundingDate: String(FOUNDING_YEAR),
     foundingLocation: {
       '@type': 'Place',
       name: 'Cancún, Quintana Roo, México',

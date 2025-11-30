@@ -22,9 +22,9 @@ export default function FlyAndDiveSection() {
 
   return (
     <section className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-accent-cyan/10 to-accent-blue/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary-red/10 to-accent-purple/10 rounded-full blur-3xl" />
+      {/* Background decorative elements - hidden on mobile for performance */}
+      <div className="hidden md:block absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-accent-cyan/10 to-accent-blue/10 rounded-full blur-3xl" />
+      <div className="hidden md:block absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary-red/10 to-accent-purple/10 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Bento Grid Layout */}
@@ -105,7 +105,7 @@ export default function FlyAndDiveSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-7"
           >
-            <div className="relative h-full min-h-[400px] lg:min-h-[600px] rounded-3xl overflow-hidden shadow-2xl group">
+            <div className="relative h-full min-h-[280px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[600px] rounded-3xl overflow-hidden shadow-2xl group">
               {/* Video */}
               <video
                 className="absolute inset-0 w-full h-full object-cover"

@@ -8,11 +8,18 @@ import {
   UserGroupIcon,
   ArrowLeftIcon,
   PhoneIcon,
-  CheckCircleIcon,
 } from '@heroicons/react/24/outline';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import LazySection from '@/components/ui/LazySection';
+
+interface AircraftPricing {
+  aircraft_name: string;
+  max_passengers: number;
+  price_usd: number;
+  notes_es: string;
+  notes_en: string;
+}
 
 interface AirTour {
   id: string;
@@ -26,6 +33,17 @@ interface AirTour {
   image_url: string | null;
   highlights_es: string[] | null;
   highlights_en: string[] | null;
+  aircraft_pricing?: AircraftPricing[] | null;
+}
+
+// Get minimum passengers from the lowest priced aircraft option
+function getMinPassengers(aircraftPricing?: AircraftPricing[] | null): number {
+  if (!aircraftPricing || aircraftPricing.length === 0) return 5; // Default fallback
+  // Find the aircraft with the lowest price and return its max_passengers
+  const lowestPriced = aircraftPricing.reduce((min, current) =>
+    current.price_usd < min.price_usd ? current : min
+  );
+  return lowestPriced.max_passengers;
 }
 
 interface AirToursContentProps {
@@ -39,7 +57,8 @@ const translations = {
     subtitle: 'Experiencias panorámicas inolvidables',
     description: 'Descubre el Caribe mexicano desde una perspectiva única. Nuestros tours aéreos te ofrecen vistas espectaculares de la zona hotelera, las ruinas mayas, cenotes y las playas más hermosas de la región.',
     backToHome: 'Volver al inicio',
-    passengers: 'Hasta 5 pasajeros',
+    passengersFrom: 'Desde',
+    passengersLabel: 'pasajeros',
     includes: 'Incluye',
     bookTour: 'Reservar este tour',
     noTours: 'No hay tours disponibles',
@@ -52,7 +71,8 @@ const translations = {
     subtitle: 'Unforgettable panoramic experiences',
     description: 'Discover the Mexican Caribbean from a unique perspective. Our air tours offer spectacular views of the hotel zone, Mayan ruins, cenotes and the most beautiful beaches in the region.',
     backToHome: 'Back to home',
-    passengers: 'Up to 5 passengers',
+    passengersFrom: 'From',
+    passengersLabel: 'passengers',
     includes: 'Includes',
     bookTour: 'Book this tour',
     noTours: 'No tours available',
@@ -86,7 +106,7 @@ export default function AirToursContent({ locale, tours }: AirToursContentProps)
                 <GlobeAmericasIcon className="w-8 h-8 text-brand-600 dark:text-brand-400" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-5xl font-bold">{t.title}</h1>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold">{t.title}</h1>
                 <p className="text-lg text-muted mt-2">{t.subtitle}</p>
               </div>
             </div>
@@ -100,94 +120,79 @@ export default function AirToursContent({ locale, tours }: AirToursContentProps)
         {/* Tours Grid */}
         <section className="py-16 md:py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
-              {tours.map((tour) => {
-                const highlights = locale === 'es' ? tour.highlights_es : tour.highlights_en;
-
-                return (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {tours.map((tour, index) => (
+                <LazySection
+                  key={tour.id}
+                  animation="slide-up"
+                  delay={index * 100}
+                >
                   <Link
-                    key={tour.id}
                     href={`/${locale}/air-tours/${tour.slug}`}
                     className="group block"
                   >
                     <article
                       id={tour.slug}
-                      className="h-full bg-white dark:bg-navy-900 rounded-3xl border border-brand-200 dark:border-brand-800 overflow-hidden hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-xl hover:shadow-brand-100 dark:hover:shadow-brand-900/30 transition-all duration-300 scroll-mt-24"
-                    >
-                      {/* Image */}
-                      <div className="relative aspect-[16/9] overflow-hidden">
-                        {tour.image_url ? (
-                          <Image
-                            src={tour.image_url}
-                            alt={locale === 'es' ? tour.name_es : tour.name_en}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center">
-                            <GlobeAmericasIcon className="w-20 h-20 text-brand-300 dark:text-brand-700" />
-                          </div>
-                        )}
-                        {/* Price badge */}
-                        <div className="absolute top-4 right-4 px-4 py-2 rounded-full bg-white/95 dark:bg-navy-900/95 backdrop-blur-sm shadow-lg">
-                          <div className="font-bold text-xl text-brand-600 dark:text-brand-400">
-                            {tour.price_from ? formatPrice(tour.price_from) : '-'}
-                          </div>
-                          <div className="text-xs text-muted text-center">{currency}</div>
+                    className="h-full bg-white dark:bg-navy-900 rounded-3xl border border-brand-200 dark:border-brand-800 overflow-hidden hover:border-brand-400 dark:hover:border-brand-600 hover:shadow-xl hover:shadow-brand-100 dark:hover:shadow-brand-900/30 transition-all duration-300 scroll-mt-24"
+                  >
+                    {/* Image */}
+                    <div className="relative aspect-[16/10] overflow-hidden">
+                      {tour.image_url ? (
+                        <Image
+                          src={tour.image_url}
+                          alt={locale === 'es'
+                            ? `Tour aéreo ${tour.name_es} - Vuelatour Cancún`
+                            : `${tour.name_en} air tour - Vuelatour Cancún`}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center">
+                          <GlobeAmericasIcon className="w-16 h-16 text-brand-300 dark:text-brand-700" />
                         </div>
-                        {/* Duration badge */}
-                        <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-full bg-navy-900/80 backdrop-blur-sm flex items-center gap-2">
-                          <ClockIcon className="w-4 h-4 text-white" />
-                          <span className="text-sm font-medium text-white">{tour.duration || '-'}</span>
+                      )}
+                      {/* Price badge */}
+                      <div className="absolute top-4 right-4 px-4 py-2 rounded-full bg-white/95 dark:bg-navy-900/95 backdrop-blur-sm shadow-lg">
+                        <div className="font-bold text-lg text-brand-600 dark:text-brand-400">
+                          {tour.price_from ? formatPrice(tour.price_from) : '-'}
+                        </div>
+                        <div className="text-xs text-muted text-center">{currency}</div>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <h2 className="text-2xl font-bold mb-3 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                        {locale === 'es' ? tour.name_es : tour.name_en}
+                      </h2>
+
+                      <p className="text-muted mb-6 line-clamp-3">
+                        {locale === 'es' ? tour.description_es : tour.description_en}
+                      </p>
+
+                      {/* Meta info */}
+                      <div className="flex items-center gap-6 mb-6 text-sm">
+                        <div className="flex items-center gap-2 text-muted">
+                          <ClockIcon className="w-5 h-5 text-brand-400" />
+                          <span className="font-medium">{tour.duration || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-muted">
+                          <UserGroupIcon className="w-5 h-5 text-brand-400" />
+                          <span className="font-medium">{t.passengersFrom} {getMinPassengers(tour.aircraft_pricing)} {t.passengersLabel}</span>
                         </div>
                       </div>
 
-                      {/* Content */}
-                      <div className="p-6 lg:p-8">
-                        <h2 className="text-2xl lg:text-3xl font-bold mb-3 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
-                          {locale === 'es' ? tour.name_es : tour.name_en}
-                        </h2>
-
-                        <p className="text-muted mb-6 line-clamp-3">
-                          {locale === 'es' ? tour.description_es : tour.description_en}
-                        </p>
-
-                        {/* Highlights */}
-                        {highlights && highlights.length > 0 && (
-                          <div className="mb-6">
-                            <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-3">
-                              {t.includes}
-                            </h3>
-                            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {highlights.slice(0, 4).map((highlight, index) => (
-                                <li key={index} className="flex items-start gap-2 text-sm">
-                                  <CheckCircleIcon className="w-5 h-5 text-brand-500 flex-shrink-0 mt-0.5" />
-                                  <span>{highlight}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-
-                        {/* Meta info */}
-                        <div className="flex items-center gap-4 mb-6 py-4 border-t border-b border-gray-100 dark:border-navy-800">
-                          <div className="flex items-center gap-2 text-sm text-muted">
-                            <UserGroupIcon className="w-5 h-5 text-brand-400" />
-                            <span>{t.passengers}</span>
-                          </div>
-                        </div>
-
-                        {/* CTA */}
-                        <div className="flex items-center justify-center gap-2 w-full py-4 px-4 bg-brand-500 group-hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors">
+                      {/* CTA */}
+                        <div className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-500 group-hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors">
                           <PhoneIcon className="w-4 h-4" />
                           {t.bookTour}
                         </div>
                       </div>
                     </article>
                   </Link>
-                );
-              })}
+                </LazySection>
+              ))}
             </div>
 
             {tours.length === 0 && (
@@ -202,7 +207,7 @@ export default function AirToursContent({ locale, tours }: AirToursContentProps)
         </section>
 
         {/* Bottom CTA */}
-        <section className="py-16 md:py-20 bg-gradient-to-r from-brand-600 to-brand-500">
+        <LazySection animation="fade" className="py-16 md:py-20 bg-gradient-to-r from-brand-600 to-brand-500">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">
               {t.customTitle}
@@ -217,9 +222,8 @@ export default function AirToursContent({ locale, tours }: AirToursContentProps)
               {t.contactNow}
             </Link>
           </div>
-        </section>
+        </LazySection>
       </main>
-      <Footer />
     </>
   );
 }

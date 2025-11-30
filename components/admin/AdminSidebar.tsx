@@ -12,10 +12,13 @@ import {
   MapPinIcon,
   PaperAirplaneIcon,
   EnvelopeIcon,
+  InboxIcon,
+  PhoneIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
   XMarkIcon,
   WrenchScrewdriverIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 
@@ -55,8 +58,18 @@ const menuItems = [
     href: '/admin/content',
   },
   {
+    title: 'Contacto',
+    icon: PhoneIcon,
+    href: '/admin/contact',
+  },
+  {
+    title: 'Legal',
+    icon: ShieldCheckIcon,
+    href: '/admin/legal',
+  },
+  {
     title: 'Mensajes',
-    icon: EnvelopeIcon,
+    icon: InboxIcon,
     href: '/admin/messages',
   },
   {
@@ -149,7 +162,8 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
           </Link>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-navy-300 hover:text-white rounded-lg hover:bg-navy-800 transition-colors"
+            className="p-2.5 text-navy-300 hover:text-white rounded-lg hover:bg-navy-800 transition-colors"
+            aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {mobileMenuOpen ? (
               <XMarkIcon className="w-6 h-6" />
@@ -170,7 +184,7 @@ export default function AdminSidebar({ userEmail }: AdminSidebarProps) {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`lg:hidden fixed top-16 left-0 bottom-0 z-30 w-64 bg-navy-900 border-r border-navy-800 transform transition-transform duration-300 ${
+        className={`lg:hidden fixed top-16 left-0 bottom-0 z-30 w-[85vw] max-w-64 bg-navy-900 border-r border-navy-800 transform transition-transform duration-300 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

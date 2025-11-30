@@ -51,8 +51,8 @@ npm run lint     # Run ESLint
 
 ### Database (Supabase)
 - **Tables**:
-  - `destinations` - Charter flight destinations with pricing, images, services
-  - `air_tours` - Air tours with pricing, duration, images, services
+  - `destinations` - Charter flight destinations with pricing, images, services, benefits (JSONB)
+  - `air_tours` - Air tours with pricing, duration, images, services, benefits (JSONB)
   - `destination_services` - Services available for destinations
   - `tour_services` - Services available for tours
   - `site_images` - Image gallery with categories (hero, fleet, destinations, tours)
@@ -104,3 +104,31 @@ green-500: #22c55e    // Status indicators (available today badge)
 - `contexts/CurrencyContext.tsx` provides currency formatting
 - Supports USD and MXN with conversion
 - Used across the site for price display
+
+### Benefits System
+- **Purpose**: "¿Por qué volar a X?" section on destination/tour detail pages
+- **Storage**: JSONB column in `destinations` and `air_tours` tables
+- **Structure**: Array of 4 benefit objects
+  ```json
+  [
+    { "key": "time", "title_es": "Ahorra tiempo", "title_en": "Save time", "desc_es": "...", "desc_en": "..." },
+    { "key": "comfort", "title_es": "Máximo confort", "title_en": "Maximum comfort", "desc_es": "...", "desc_en": "..." },
+    { "key": "views", "title_es": "Vistas increíbles", "title_en": "Incredible views", "desc_es": "...", "desc_en": "..." },
+    { "key": "flexible", "title_es": "Horarios flexibles", "title_en": "Flexible schedules", "desc_es": "...", "desc_en": "..." }
+  ]
+  ```
+- **Admin UI**: Editable in destinations/tours admin under "Servicios" tab
+- **Fallback**: DEFAULT_BENEFITS constant used when database value is null
+
+### Aircraft Pricing System
+- **Purpose**: Multiple aircraft pricing options per destination/tour (e.g., Cessna 206, Kodiak 100)
+- **Storage**: JSONB column `aircraft_pricing` in `destinations` and `air_tours` tables
+- **Structure**: Array of pricing objects
+  ```json
+  [
+    { "aircraft_name": "Cessna 206", "max_passengers": 5, "price_usd": 750, "notes_es": "...", "notes_en": "..." },
+    { "aircraft_name": "Kodiak 100", "max_passengers": 9, "price_usd": 1690, "notes_es": "...", "notes_en": "..." }
+  ]
+  ```
+- **Admin UI**: Editable in destinations/tours admin under "Precios" tab
+- **Display**: Shows pricing cards in destination detail sidebar

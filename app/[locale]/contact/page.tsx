@@ -1,6 +1,7 @@
-import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import { createClient } from '@/lib/supabase/server';
 import ContactForm from '@/components/contact/ContactForm';
+import LazyMap from '@/components/ui/LazyMap';
 import {
   MapPinIcon,
   PhoneIcon,
@@ -10,36 +11,66 @@ import {
 
 interface ContactPageProps {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{
+    destination?: string;
+    tour?: string;
+    aircraft?: string;
+    price?: string;
+  }>;
 }
 
-export default async function ContactPage({ params }: ContactPageProps) {
+export default async function ContactPage({ params, searchParams }: ContactPageProps) {
   const { locale } = await params;
+  const urlParams = await searchParams;
   const t = await getTranslations('contact');
+  const supabase = await createClient();
 
-  const contactInfo = [
+  // Fetch contact info from database
+  const { data: dbContactInfo } = await supabase
+    .from('contact_info')
+    .select('*')
+    .single();
+
+  // Build contact info array with database values or defaults
+  const contactInfoItems = [
     {
       icon: MapPinIcon,
       title: locale === 'es' ? 'Dirección' : 'Address',
-      content: 'Aeropuerto Internacional de Cancún, Terminal FBO, Cancún, Q.R., México',
+      content: locale === 'es'
+        ? (dbContactInfo?.address_es || 'Aeropuerto Internacional de Cancún, Terminal FBO, Cancún, Q.R., México')
+        : (dbContactInfo?.address_en || 'Cancún International Airport, FBO Terminal, Cancún, Q.R., Mexico'),
     },
     {
       icon: PhoneIcon,
       title: locale === 'es' ? 'Teléfono' : 'Phone',
-      content: '+52 998 740 7149',
-      href: 'tel:+529987407149',
+      content: dbContactInfo?.phone || '+52 998 740 7149',
+      href: `tel:${dbContactInfo?.phone_link || '+529987407149'}`,
     },
     {
       icon: EnvelopeIcon,
       title: locale === 'es' ? 'Email' : 'Email',
-      content: 'info@vuelatour.com',
-      href: 'mailto:info@vuelatour.com',
+      content: dbContactInfo?.email || 'info@vuelatour.com',
+      href: `mailto:${dbContactInfo?.email || 'info@vuelatour.com'}`,
     },
     {
       icon: ClockIcon,
       title: locale === 'es' ? 'Horario' : 'Hours',
-      content: locale === 'es' ? 'Lunes a Domingo: 6:00 AM - 8:00 PM' : 'Monday to Sunday: 6:00 AM - 8:00 PM',
+      content: locale === 'es'
+        ? (dbContactInfo?.hours_es || 'Lunes a Domingo: 6:00 AM - 8:00 PM')
+        : (dbContactInfo?.hours_en || 'Monday to Sunday: 6:00 AM - 8:00 PM'),
     },
   ];
+
+  // WhatsApp configuration
+  const whatsappNumber = dbContactInfo?.whatsapp_number || '529987407149';
+  const whatsappMessage = locale === 'es'
+    ? (dbContactInfo?.whatsapp_message_es || '')
+    : (dbContactInfo?.whatsapp_message_en || '');
+  const whatsappUrl = `https://wa.me/${whatsappNumber}${whatsappMessage ? `?text=${encodeURIComponent(whatsappMessage)}` : ''}`;
+
+  // Google Maps URL
+  const googleMapsEmbed = dbContactInfo?.google_maps_embed ||
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.2847392889904!2d-86.87699268507456!3d21.036544985994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2b05aef653db%3A0xce32b73c625fcd8a!2sAeropuerto%20Internacional%20de%20Canc%C3%BAn!5e0!3m2!1ses-419!2smx!4v1640000000000!5m2!1ses-419!2smx';
 
   return (
     <main className="min-h-screen pt-20 pb-16">
@@ -61,14 +92,14 @@ export default async function ContactPage({ params }: ContactPageProps) {
               <h2 className="text-xl font-semibold mb-6">
                 {locale === 'es' ? 'Envíanos un mensaje' : 'Send us a message'}
               </h2>
-              <ContactForm locale={locale} />
+              <ContactForm locale={locale} searchParams={urlParams} />
             </div>
           </div>
 
           {/* Contact Info */}
           <div className="order-1 lg:order-2">
             <div className="space-y-6">
-              {contactInfo.map((item, index) => (
+              {contactInfoItems.map((item, index) => (
                 <div key={index} className="card p-4 flex items-start gap-4">
                   <div className="p-2 rounded-lg bg-brand-100 dark:bg-brand-900/30">
                     <item.icon className="w-5 h-5 text-brand-600 dark:text-brand-400" />
@@ -91,7 +122,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
               {/* WhatsApp CTA */}
               <a
-                href="https://wa.me/529987407149"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-3 w-full p-4 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-colors"
@@ -102,17 +133,12 @@ export default async function ContactPage({ params }: ContactPageProps) {
                 {locale === 'es' ? 'Contáctanos por WhatsApp' : 'Contact us on WhatsApp'}
               </a>
 
-              {/* Map placeholder */}
+              {/* Map */}
               <div className="card overflow-hidden">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3721.2847392889904!2d-86.87699268507456!3d21.036544985994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f4c2b05aef653db%3A0xce32b73c625fcd8a!2sAeropuerto%20Internacional%20de%20Canc%C3%BAn!5e0!3m2!1ses-419!2smx!4v1640000000000!5m2!1ses-419!2smx"
-                  width="100%"
-                  height="300"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  className="grayscale hover:grayscale-0 transition-all duration-300"
+                <LazyMap
+                  src={googleMapsEmbed}
+                  height={300}
+                  title={locale === 'es' ? 'Ubicación de Vuelatour' : 'Vuelatour Location'}
                 />
               </div>
             </div>
@@ -129,7 +155,7 @@ export async function generateMetadata({ params }: ContactPageProps) {
   return {
     title: locale === 'es' ? 'Contacto | Vuelatour' : 'Contact | Vuelatour',
     description: locale === 'es'
-      ? 'Contáctanos para reservar tu vuelo charter o tour aéreo en Cancún. Respondemos en menos de 24 horas.'
+      ? 'Contáctanos para reservar tu vuelo privado o tour aéreo en Cancún. Respondemos en menos de 24 horas.'
       : 'Contact us to book your charter flight or air tour in Cancún. We respond within 24 hours.',
   };
 }

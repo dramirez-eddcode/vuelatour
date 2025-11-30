@@ -27,18 +27,29 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
   const name = locale === 'es' ? tour.name_es : tour.name_en;
   const description = locale === 'es' ? tour.description_es : tour.description_en;
 
+  // Use custom meta fields from database if available, otherwise use fallbacks
+  const metaTitle = locale === 'es'
+    ? (tour.meta_title_es || `${name} - Tour Aéreo | Vuelatour`)
+    : (tour.meta_title_en || `${name} - Air Tour | Vuelatour`);
+
+  const metaDescription = locale === 'es'
+    ? (tour.meta_description_es || description || `Tour aéreo panorámico: ${name}. Vive una experiencia única sobrevolando el Caribe mexicano.`)
+    : (tour.meta_description_en || description || `Panoramic air tour: ${name}. Live a unique experience flying over the Mexican Caribbean.`);
+
   return {
-    title: locale === 'es'
-      ? `${name} - Tour Aéreo | Vuelatour`
-      : `${name} - Air Tour | Vuelatour`,
-    description: description || (locale === 'es'
-      ? `Tour aéreo panorámico: ${name}. Vive una experiencia única sobrevolando el Caribe mexicano.`
-      : `Panoramic air tour: ${name}. Live a unique experience flying over the Mexican Caribbean.`),
+    title: metaTitle,
+    description: metaDescription,
     openGraph: {
-      title: locale === 'es'
-        ? `${name} - Tour Aéreo`
-        : `${name} - Air Tour`,
-      description: description || '',
+      title: metaTitle,
+      description: metaDescription,
+      images: tour.image_url ? [tour.image_url] : [],
+      type: 'website',
+      locale: locale === 'es' ? 'es_MX' : 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description: metaDescription,
       images: tour.image_url ? [tour.image_url] : [],
     },
   };

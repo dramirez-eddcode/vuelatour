@@ -33,18 +33,18 @@ export default function WhyChooseSection() {
       </div>
 
       <div className="relative container mx-auto px-4">
-        <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-16">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-8 md:mb-16">
           {t('title')}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
           {reasons.map((reason, index) => (
             <div
               key={index}
-              className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 hover:bg-white transition-all hover:scale-105 shadow-xl"
+              className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 md:p-8 hover:bg-white transition-all hover:scale-105 shadow-xl"
             >
               <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-primary-red rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-primary-red rounded-full flex items-center justify-center">
                   <reason.icon className="w-10 h-10 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-primary-dark">

@@ -31,8 +31,10 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* Account for fixed header (80px) */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 
   body {
@@ -41,6 +43,7 @@
     font-feature-settings: 'kern' 1, 'liga' 1;
     text-rendering: optimizeLegibility;
     transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
   }
 
   /* Typography */

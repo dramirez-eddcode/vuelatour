@@ -18,6 +18,7 @@ import {
   DocumentTextIcon,
   Cog6ToothIcon,
   MagnifyingGlassIcon,
+  CurrencyDollarIcon,
   SunIcon,
   SparklesIcon,
   CameraIcon,
@@ -25,8 +26,13 @@ import {
   CheckCircleIcon,
   UserGroupIcon,
   ArrowTopRightOnSquareIcon,
+  PhotoIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import ImageSelector from '@/components/admin/ImageSelector';
+import GalleryTab from '@/components/admin/GalleryTab';
+import MarkdownEditor from '@/components/admin/MarkdownEditor';
 import Image from 'next/image';
 
 // Service interface (from database)
@@ -66,6 +72,19 @@ interface Benefit {
   desc_en: string;
 }
 
+interface AircraftPricing {
+  aircraft_name: string;
+  max_passengers: number;
+  price_usd: number;
+  notes_es: string;
+  notes_en: string;
+}
+
+// Default aircraft pricing
+const DEFAULT_AIRCRAFT_PRICING: AircraftPricing[] = [
+  { aircraft_name: 'Cessna 206', max_passengers: 5, price_usd: 750, notes_es: 'No incluye impuestos y posibles cargos extras*', notes_en: 'Does not include taxes and possible extra charges*' },
+];
+
 interface Destination {
   id: string;
   slug: string;
@@ -82,6 +101,7 @@ interface Destination {
   display_order: number;
   services_included?: string[] | null;
   benefits?: Benefit[] | null;
+  aircraft_pricing?: AircraftPricing[] | null;
   max_passengers?: number | null;
   gallery_images?: string[] | null;
   meta_title_es?: string | null;
@@ -111,6 +131,7 @@ const emptyDestination: Omit<Destination, 'id'> = {
   display_order: 0,
   services_included: ['climate', 'luggage', 'water', 'photos', 'sanitizer', 'safety'],
   benefits: DEFAULT_BENEFITS,
+  aircraft_pricing: DEFAULT_AIRCRAFT_PRICING,
   max_passengers: 5,
   gallery_images: [],
   meta_title_es: '',
@@ -119,7 +140,7 @@ const emptyDestination: Omit<Destination, 'id'> = {
   meta_description_en: '',
 };
 
-type TabKey = 'basic' | 'content' | 'services' | 'seo';
+type TabKey = 'basic' | 'content' | 'pricing' | 'gallery' | 'services' | 'seo';
 
 export default function DestinationsContent({ user, destinations: initialDestinations, availableServices }: DestinationsContentProps) {
   const router = useRouter();
@@ -160,7 +181,8 @@ export default function DestinationsContent({ user, destinations: initialDestina
       is_active: destination.is_active,
       display_order: destination.display_order,
       services_included: destination.services_included || ['climate', 'luggage', 'water', 'photos', 'sanitizer', 'safety'],
-      benefits: destination.benefits || DEFAULT_BENEFITS,
+      benefits: (destination.benefits && destination.benefits.length > 0) ? destination.benefits : DEFAULT_BENEFITS,
+      aircraft_pricing: (destination.aircraft_pricing && destination.aircraft_pricing.length > 0) ? destination.aircraft_pricing : DEFAULT_AIRCRAFT_PRICING,
       max_passengers: destination.max_passengers || 5,
       gallery_images: destination.gallery_images || [],
       meta_title_es: destination.meta_title_es || '',
@@ -324,9 +346,46 @@ export default function DestinationsContent({ user, destinations: initialDestina
   };
 
   const updateBenefit = (index: number, field: keyof Benefit, value: string) => {
-    const benefits = [...(formData.benefits || DEFAULT_BENEFITS)];
+    const currentBenefits = (formData.benefits && formData.benefits.length > 0) ? formData.benefits : DEFAULT_BENEFITS;
+    const benefits = [...currentBenefits];
     benefits[index] = { ...benefits[index], [field]: value };
     setFormData({ ...formData, benefits });
+  };
+
+  // Aircraft pricing functions
+  const getCurrentPricing = () => {
+    return (formData.aircraft_pricing && formData.aircraft_pricing.length > 0)
+      ? formData.aircraft_pricing
+      : DEFAULT_AIRCRAFT_PRICING;
+  };
+
+  const addAircraftPricing = () => {
+    const currentPricing = getCurrentPricing();
+    const newPricing: AircraftPricing = {
+      aircraft_name: '',
+      max_passengers: 5,
+      price_usd: 0,
+      notes_es: 'No incluye impuestos y posibles cargos extras*',
+      notes_en: 'Does not include taxes and possible extra charges*',
+    };
+    setFormData({ ...formData, aircraft_pricing: [...currentPricing, newPricing] });
+  };
+
+  const removeAircraftPricing = (index: number) => {
+    const currentPricing = getCurrentPricing();
+    if (currentPricing.length <= 1) {
+      toast.error('Debe haber al menos un precio de avión');
+      return;
+    }
+    const newPricing = currentPricing.filter((_, i) => i !== index);
+    setFormData({ ...formData, aircraft_pricing: newPricing });
+  };
+
+  const updateAircraftPricing = (index: number, field: keyof AircraftPricing, value: string | number) => {
+    const currentPricing = getCurrentPricing();
+    const newPricing = [...currentPricing];
+    newPricing[index] = { ...newPricing[index], [field]: value };
+    setFormData({ ...formData, aircraft_pricing: newPricing });
   };
 
   const sortedDestinations = [...destinations].sort((a, b) => a.display_order - b.display_order);
@@ -334,6 +393,8 @@ export default function DestinationsContent({ user, destinations: initialDestina
   const tabs: { key: TabKey; label: string; icon: any }[] = [
     { key: 'basic', label: 'Básico', icon: MapPinIcon },
     { key: 'content', label: 'Contenido', icon: DocumentTextIcon },
+    { key: 'pricing', label: 'Precios', icon: CurrencyDollarIcon },
+    { key: 'gallery', label: 'Galería', icon: PhotoIcon },
     { key: 'services', label: 'Servicios', icon: Cog6ToothIcon },
     { key: 'seo', label: 'SEO', icon: MagnifyingGlassIcon },
   ];
@@ -577,22 +638,12 @@ export default function DestinationsContent({ user, destinations: initialDestina
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-navy-300 mb-1">Precio (USD)</label>
+                      <label className="block text-sm font-medium text-navy-300 mb-1">Precio desde (USD)</label>
                       <input
                         type="number"
                         value={formData.price_from || ''}
                         onChange={(e) => setFormData({ ...formData, price_from: parseFloat(e.target.value) || 0 })}
                         placeholder="450"
-                        className="w-full px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-navy-300 mb-1">Pasajeros</label>
-                      <input
-                        type="number"
-                        value={formData.max_passengers || 5}
-                        onChange={(e) => setFormData({ ...formData, max_passengers: parseInt(e.target.value) || 5 })}
-                        placeholder="5"
                         className="w-full px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
                       />
                     </div>
@@ -652,32 +703,168 @@ export default function DestinationsContent({ user, destinations: initialDestina
                   </div>
 
                   <div className="border-t border-navy-800 pt-5">
-                    <label className="block text-sm font-medium text-navy-300 mb-1">
-                      <span className="mr-1">🇪🇸</span> Descripción detallada (ES)
-                    </label>
-                    <p className="text-xs text-navy-500 mb-2">Para la página de detalle</p>
-                    <textarea
+                    <MarkdownEditor
                       value={formData.long_description_es || ''}
-                      onChange={(e) => setFormData({ ...formData, long_description_es: e.target.value })}
-                      rows={4}
+                      onChange={(value) => setFormData({ ...formData, long_description_es: value })}
+                      label="🇪🇸 Descripción detallada (ES)"
+                      description="Para la página de detalle. Soporta formato markdown."
                       placeholder="Descripción completa del destino..."
-                      className="w-full px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      rows={6}
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-navy-300 mb-1">
-                      <span className="mr-1">🇺🇸</span> Descripción detallada (EN)
-                    </label>
-                    <textarea
+                    <MarkdownEditor
                       value={formData.long_description_en || ''}
-                      onChange={(e) => setFormData({ ...formData, long_description_en: e.target.value })}
-                      rows={4}
+                      onChange={(value) => setFormData({ ...formData, long_description_en: value })}
+                      label="🇺🇸 Descripción detallada (EN)"
+                      description="For the detail page. Supports markdown formatting."
                       placeholder="Full description..."
-                      className="w-full px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+                      rows={6}
                     />
                   </div>
                 </div>
+              )}
+
+              {/* Tab: Pricing */}
+              {activeTab === 'pricing' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">Precios por Avión</h3>
+                      <p className="text-xs text-navy-500 mt-1">Configura los precios según el tipo de aeronave</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={addAircraftPricing}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-sm bg-brand-500 hover:bg-brand-600 text-white rounded-lg transition-colors"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                      Agregar avión
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {getCurrentPricing().map((pricing, index) => (
+                      <div key={index} className="bg-navy-800/50 rounded-lg p-4 border border-navy-700">
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs font-bold">
+                              {index + 1}
+                            </span>
+                            <span className="text-sm font-medium text-white">
+                              {pricing.aircraft_name || 'Nuevo avión'}
+                            </span>
+                          </span>
+                          {getCurrentPricing().length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => removeAircraftPricing(index)}
+                              className="p-1.5 text-navy-400 hover:text-red-400 hover:bg-navy-700 rounded transition-colors"
+                            >
+                              <TrashIcon className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <label className="block text-xs font-medium text-navy-400 mb-1">Nombre del avión</label>
+                            <input
+                              type="text"
+                              value={pricing.aircraft_name}
+                              onChange={(e) => updateAircraftPricing(index, 'aircraft_name', e.target.value)}
+                              placeholder="Ej: Cessna 206"
+                              className="w-full px-3 py-2 text-sm bg-navy-900 border border-navy-600 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-navy-400 mb-1">Máx. pasajeros</label>
+                            <input
+                              type="number"
+                              value={pricing.max_passengers}
+                              onChange={(e) => updateAircraftPricing(index, 'max_passengers', parseInt(e.target.value) || 0)}
+                              placeholder="5"
+                              min="1"
+                              className="w-full px-3 py-2 text-sm bg-navy-900 border border-navy-600 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <label className="block text-xs font-medium text-navy-400 mb-1">Precio desde (USD)</label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400">$</span>
+                            <input
+                              type="number"
+                              value={pricing.price_usd}
+                              onChange={(e) => updateAircraftPricing(index, 'price_usd', parseInt(e.target.value) || 0)}
+                              placeholder="750"
+                              min="0"
+                              className="w-full pl-7 pr-3 py-2 text-sm bg-navy-900 border border-navy-600 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-medium text-navy-400 mb-1">
+                              <span className="mr-1">🇪🇸</span> Notas (ES)
+                            </label>
+                            <input
+                              type="text"
+                              value={pricing.notes_es}
+                              onChange={(e) => updateAircraftPricing(index, 'notes_es', e.target.value)}
+                              placeholder="No incluye impuestos..."
+                              className="w-full px-3 py-2 text-sm bg-navy-900 border border-navy-600 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-navy-400 mb-1">
+                              <span className="mr-1">🇺🇸</span> Notes (EN)
+                            </label>
+                            <input
+                              type="text"
+                              value={pricing.notes_en}
+                              onChange={(e) => updateAircraftPricing(index, 'notes_en', e.target.value)}
+                              placeholder="Does not include taxes..."
+                              className="w-full px-3 py-2 text-sm bg-navy-900 border border-navy-600 rounded-lg text-white placeholder-navy-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Preview */}
+                  <div className="border-t border-navy-800 pt-6">
+                    <h4 className="text-sm font-semibold text-white mb-3">Vista previa</h4>
+                    <div className="flex gap-4 overflow-x-auto pb-2">
+                      {getCurrentPricing().map((pricing, index) => (
+                        <div key={index} className="flex-shrink-0 w-48 bg-white rounded-lg p-4 text-center">
+                          <p className="text-xs text-gray-500 mb-1">
+                            Para hasta {pricing.max_passengers} pasajeros
+                          </p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            ${pricing.price_usd.toLocaleString()}
+                          </p>
+                          <p className="text-sm text-gray-600">USD</p>
+                          <p className="text-xs text-brand-500 mt-2">{pricing.aircraft_name || 'Avión'}</p>
+                          <p className="text-[10px] text-gray-400 mt-1">{pricing.notes_es}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab: Gallery */}
+              {activeTab === 'gallery' && (
+                <GalleryTab
+                  galleryImages={formData.gallery_images || []}
+                  onUpdate={(images) => setFormData({ ...formData, gallery_images: images })}
+                  category="destinations"
+                />
               )}
 
               {/* Tab: Services & Benefits */}
@@ -733,8 +920,9 @@ export default function DestinationsContent({ user, destinations: initialDestina
 
                   <div className="border-t border-navy-800 pt-6">
                     <h3 className="text-sm font-semibold text-white mb-4">Beneficios (4 items)</h3>
+                    <p className="text-xs text-navy-500 mb-4">Sección &quot;¿Por qué volar a este destino?&quot; en la página de detalle</p>
                     <div className="space-y-4">
-                      {(formData.benefits || DEFAULT_BENEFITS).map((benefit, index) => (
+                      {((formData.benefits && formData.benefits.length > 0) ? formData.benefits : DEFAULT_BENEFITS).map((benefit, index) => (
                         <div key={benefit.key} className="bg-navy-800/50 rounded-lg p-4 border border-navy-700">
                           <div className="flex items-center gap-2 mb-3">
                             <span className="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs font-bold">

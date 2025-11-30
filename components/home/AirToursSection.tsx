@@ -76,7 +76,7 @@ export default function AirToursSection() {
             </span>
           </motion.div>
 
-          <h2 className="text-4xl lg:text-6xl font-heading font-bold text-primary-dark mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-primary-dark mb-6">
             {t('title')}
           </h2>
           <p className="text-xl text-gray-600 leading-relaxed">
@@ -97,7 +97,7 @@ export default function AirToursSection() {
               className="group relative bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300"
             >
               {/* Image Container */}
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-48 md:h-64 overflow-hidden">
                 <motion.img
                   src={tour.image}
                   alt={tour.title}
@@ -167,13 +167,13 @@ export default function AirToursSection() {
         </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
           {/* Card 1 */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-8 border border-blue-100"
+            className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-4 md:p-8 border border-blue-100"
           >
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 bg-gradient-to-br from-accent-blue to-accent-cyan rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -195,7 +195,7 @@ export default function AirToursSection() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100"
+            className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-4 md:p-8 border border-purple-100"
           >
             <div className="flex items-start gap-4 mb-4">
               <div className="w-14 h-14 bg-gradient-to-br from-accent-purple to-pink-500 rounded-2xl flex items-center justify-center flex-shrink-0">

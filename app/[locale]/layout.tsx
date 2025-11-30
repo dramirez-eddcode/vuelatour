@@ -3,8 +3,10 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import FooterWrapper from '@/components/layout/FooterWrapper';
+import { LazyCookieBanner } from '@/components/layout/LazyComponents';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
+import { LoadingProvider } from '@/contexts/LoadingContext';
 import '../globals.css';
 
 // Modern, clean font
@@ -53,9 +55,12 @@ export default async function LocaleLayout({
       <body className={`${inter.className} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider>
-            <Header />
-            <main>{children}</main>
-            <Footer />
+            <LoadingProvider>
+              <Header />
+              <main>{children}</main>
+              <FooterWrapper />
+              <LazyCookieBanner />
+            </LoadingProvider>
           </CurrencyProvider>
         </NextIntlClientProvider>
       </body>

@@ -40,7 +40,7 @@ const statusConfig = {
 };
 
 const serviceTypes = {
-  charter: 'Vuelo Charter',
+  charter: 'Vuelo Privado',
   tour: 'Tour Aéreo',
   general: 'Consulta General',
 };

@@ -1,6 +1,6 @@
 # Vuelatour - Air Tours & Charter Flights Website
 
-Sitio web moderno para Vuelatour, empresa de tours aéreos y vuelos charter en Cancún y la Riviera Maya.
+Sitio web moderno para Vuelatour, empresa de tours aéreos y vuelos privados en Cancún y la Riviera Maya.
 
 ## 🚀 Tecnologías
 

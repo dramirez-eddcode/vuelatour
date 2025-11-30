@@ -27,18 +27,29 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
   const name = locale === 'es' ? destination.name_es : destination.name_en;
   const description = locale === 'es' ? destination.description_es : destination.description_en;
 
+  // Use custom meta fields from database if available, otherwise use fallbacks
+  const metaTitle = locale === 'es'
+    ? (destination.meta_title_es || `Vuelo Privado a ${name} | Vuelatour`)
+    : (destination.meta_title_en || `Private Flight to ${name} | Vuelatour`);
+
+  const metaDescription = locale === 'es'
+    ? (destination.meta_description_es || description || `Vuelo privado desde Cancún a ${name}. Reserva tu vuelo privado exclusivo.`)
+    : (destination.meta_description_en || description || `Private flight from Cancún to ${name}. Book your exclusive charter flight.`);
+
   return {
-    title: locale === 'es'
-      ? `Vuelo Privado a ${name} | Vuelatour`
-      : `Private Flight to ${name} | Vuelatour`,
-    description: description || (locale === 'es'
-      ? `Vuelo privado desde Cancún a ${name}. Reserva tu vuelo charter exclusivo.`
-      : `Private flight from Cancún to ${name}. Book your exclusive charter flight.`),
+    title: metaTitle,
+    description: metaDescription,
     openGraph: {
-      title: locale === 'es'
-        ? `Vuelo Privado a ${name}`
-        : `Private Flight to ${name}`,
-      description: description || '',
+      title: metaTitle,
+      description: metaDescription,
+      images: destination.image_url ? [destination.image_url] : [],
+      type: 'website',
+      locale: locale === 'es' ? 'es_MX' : 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: metaTitle,
+      description: metaDescription,
       images: destination.image_url ? [destination.image_url] : [],
     },
   };

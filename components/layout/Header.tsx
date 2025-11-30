@@ -54,8 +54,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'glass shadow-soft'
+        scrolled || mobileMenuOpen
+          ? 'bg-white dark:bg-navy-900 shadow-soft'
           : 'bg-transparent'
       }`}
     >
@@ -150,13 +150,13 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-default animate-slide-down">
+          <div className="md:hidden py-4 border-t border-default animate-slide-down bg-white dark:bg-navy-900">
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-3 text-sm font-medium rounded-lg hover:surface-muted transition-colors"
+                  className="px-4 py-3 text-sm font-medium rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy-800 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {link.label}
@@ -176,7 +176,7 @@ export default function Header() {
                       className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
                         locale === lang
                           ? 'bg-brand-500 text-white'
-                          : 'surface-muted text-muted'
+                          : 'bg-gray-100 dark:bg-navy-800 text-gray-600 dark:text-gray-300'
                       }`}
                     >
                       {lang === 'es' ? 'Español' : 'English'}

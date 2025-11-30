@@ -2,6 +2,8 @@ import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import HeroCards from './HeroCards';
+import { getYearsOfExperienceFormatted } from '@/lib/constants';
 
 interface ContentMap {
   [key: string]: {
@@ -20,13 +22,28 @@ interface HeroImage {
   is_primary?: boolean;
 }
 
+interface FeaturedItem {
+  id: string;
+  slug: string;
+  name_es: string;
+  name_en: string;
+  description_es: string | null;
+  description_en: string | null;
+  price_from: number | null;
+  duration: string | null;
+  image_url: string | null;
+}
+
 interface HeroSectionProps {
   locale: string;
   content: ContentMap;
   heroImage?: HeroImage | null;
+  featuredTour?: FeaturedItem | null;
+  featuredDestination?: FeaturedItem | null;
+  hasPopularData?: boolean;
 }
 
-export default function HeroSection({ locale, content, heroImage }: HeroSectionProps) {
+export default function HeroSection({ locale, content, heroImage, featuredTour, featuredDestination, hasPopularData }: HeroSectionProps) {
   const t = useTranslations('hero');
 
   // Helper to get content with fallback to translations
@@ -65,10 +82,10 @@ export default function HeroSection({ locale, content, heroImage }: HeroSectionP
         <div className="absolute inset-0 bg-white/90 dark:bg-navy-950/90" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
-          <div>
+          <div className="overflow-hidden">
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-xs font-medium rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -76,7 +93,7 @@ export default function HeroSection({ locale, content, heroImage }: HeroSectionP
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] mb-6">
               {getContent('hero_title', t('titleLine1'))}
               <br />
               <span className="text-brand-500">
@@ -107,15 +124,15 @@ export default function HeroSection({ locale, content, heroImage }: HeroSectionP
             </div>
 
             {/* Stats - Minimal */}
-            <div className="flex items-center gap-8 mt-12 pt-8 border-t border-default">
+            <div className="flex items-center gap-4 sm:gap-6 md:gap-8 mt-8 md:mt-12 pt-6 md:pt-8 border-t border-default">
               {[
-                { value: '15+', label: t('stats.years') },
+                { value: getYearsOfExperienceFormatted(), label: t('stats.years') },
                 { value: '5,000+', label: t('stats.flights') },
                 { value: '4.9', label: t('stats.rating') },
               ].map((stat, index) => (
                 <div key={index}>
-                  <div className="text-2xl font-semibold">{stat.value}</div>
-                  <div className="text-sm text-muted">{stat.label}</div>
+                  <div className="text-xl sm:text-2xl font-semibold">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-muted">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -123,53 +140,12 @@ export default function HeroSection({ locale, content, heroImage }: HeroSectionP
 
           {/* Right side - Feature cards (visible on larger screens) */}
           <div className="hidden lg:block">
-            <div className="grid gap-4">
-              {/* Featured Aircraft Card */}
-              <div className="card p-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 bg-navy-100 dark:bg-navy-800">
-                    <Image
-                      src="/images/fleet/cessna-206.jpg"
-                      alt={locale === 'es' ? 'Cessna 206 - Flota Vuelatour' : 'Cessna 206 - Vuelatour Fleet'}
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted mb-1">{locale === 'es' ? 'Nuestra Flota' : 'Our Fleet'}</div>
-                    <div className="font-semibold">Cessna 206</div>
-                    <div className="text-sm text-muted">{locale === 'es' ? 'Hasta 5 pasajeros' : 'Up to 5 passengers'}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Stats Card */}
-              <div className="card p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm text-muted mb-1">{locale === 'es' ? 'Próximo vuelo disponible' : 'Next flight available'}</div>
-                    <div className="font-semibold text-brand-500">{locale === 'es' ? 'Hoy' : 'Today'}</div>
-                  </div>
-                  <div className="w-12 h-12 rounded-full bg-brand-100 dark:bg-navy-800 flex items-center justify-center">
-                    <span className="text-xl">✈️</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Certification Badge */}
-              <div className="card p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <span className="text-green-600 dark:text-green-400 text-lg">✓</span>
-                  </div>
-                  <div>
-                    <div className="font-medium">FAA Certified</div>
-                    <div className="text-sm text-muted">{locale === 'es' ? 'Operador certificado' : 'Certified operator'}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <HeroCards
+              locale={locale}
+              featuredTour={featuredTour}
+              featuredDestination={featuredDestination}
+              hasPopularData={hasPopularData}
+            />
           </div>
         </div>
       </div>
