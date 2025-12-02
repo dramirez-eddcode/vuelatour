@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, RefObject } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface UseIntersectionObserverOptions {
   threshold?: number;
@@ -10,21 +10,30 @@ interface UseIntersectionObserverOptions {
 
 export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {}
-): [RefObject<T | null>, boolean] {
+): [(node: T | null) => void, boolean] {
   const { threshold = 0.1, rootMargin = '100px', triggerOnce = true } = options;
-  const ref = useRef<T | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [element, setElement] = useState<T | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const setRef = useCallback((node: T | null) => {
+    setElement(node);
+  }, []);
 
   useEffect(() => {
-    const element = ref.current;
     if (!element) return;
 
-    const observer = new IntersectionObserver(
+    // Cleanup previous observer
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (triggerOnce) {
-            observer.unobserve(element);
+          if (triggerOnce && observerRef.current) {
+            observerRef.current.unobserve(element);
           }
         } else if (!triggerOnce) {
           setIsVisible(false);
@@ -33,14 +42,16 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
       { threshold, rootMargin }
     );
 
-    observer.observe(element);
+    observerRef.current.observe(element);
 
     return () => {
-      observer.unobserve(element);
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
     };
-  }, [threshold, rootMargin, triggerOnce]);
+  }, [element, threshold, rootMargin, triggerOnce]);
 
-  return [ref, isVisible];
+  return [setRef, isVisible];
 }
 
 export default useIntersectionObserver;
