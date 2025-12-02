@@ -9,6 +9,11 @@ import {
   ClockIcon,
 } from '@heroicons/react/24/outline';
 
+interface Phone {
+  display: string;
+  link: string;
+}
+
 interface ContactPageProps {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{
@@ -32,7 +37,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
     .single();
 
   // Get phones array or fallback to old phone field
-  const phones = dbContactInfo?.phones && Array.isArray(dbContactInfo.phones) && dbContactInfo.phones.length > 0
+  const phones: Phone[] = dbContactInfo?.phones && Array.isArray(dbContactInfo.phones) && dbContactInfo.phones.length > 0
     ? dbContactInfo.phones
     : [{ display: dbContactInfo?.phone || '+52 998 740 7149', link: dbContactInfo?.phone_link || '+529987407149' }];
 

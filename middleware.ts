@@ -4,9 +4,9 @@ import { updateSession } from '@/lib/supabase/middleware';
 
 const intlMiddleware = createIntlMiddleware({
   locales: ['es', 'en'],
-  defaultLocale: 'es',
+  defaultLocale: 'en',
   localePrefix: 'always',
-  localeDetection: true // Detecta automáticamente el idioma del navegador
+  localeDetection: false // Siempre inglés por defecto
 });
 
 export async function middleware(request: NextRequest) {
