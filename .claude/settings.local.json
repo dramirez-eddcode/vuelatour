@@ -10,7 +10,10 @@
       "Bash(cd:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Responsive fixes, dynamic passengers, and UI improvements\n\n- Fix anchor scroll not working on mobile (scroll-padding-top for fixed header)\n- Fix mobile menu transparent background (solid bg in light/dark mode)\n- Fix services cards text overflow on mobile (vertical layout)\n- Change \"Hasta X pasajeros\" to \"Desde X pasajeros\" with dynamic value from lowest-priced aircraft\n- Remove max_passengers field from admin forms (now calculated from pricing)\n- Add loading states, lazy components, and performance optimizations\n- Add legal pages (privacy, terms, cookies) with admin editor\n- Add contact info admin panel\n- Add cookie consent banner\n- Clean up unused images and videos\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Dark navbar/footer, remove max_passengers, contact form order\n\n- Make Header and Footer always use navy-900 dark background\n- Remove max_passengers column references from admin and detail pages\n- Fix contact page responsive: form first, then contact info on mobile\n- Add more spacing between navbar and contact page title\n- Create SQL migration to drop max_passengers columns\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Dark navbar/footer, remove max_passengers, contact form order\n\n- Make Header and Footer always use navy-900 dark background\n- Remove max_passengers column references from admin and detail pages\n- Fix contact page responsive: form first, then contact info on mobile\n- Add more spacing between navbar and contact page title\n- Create SQL migration to drop max_passengers columns\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npm run build:*)",
+      "Bash(Select-String -Pattern \"(Error|Warning|Compiled)\")",
+      "Bash(Select-Object -First 20)"
     ],
     "deny": [],
     "ask": []

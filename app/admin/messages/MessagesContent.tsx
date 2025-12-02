@@ -14,7 +14,24 @@ import {
   ClockIcon,
   PhoneIcon,
   XMarkIcon,
+  CalendarIcon,
+  MapPinIcon,
+  UserGroupIcon,
+  PaperAirplaneIcon,
+  ArrowPathIcon,
 } from '@heroicons/react/24/outline';
+
+interface TourData {
+  name_es: string;
+  name_en: string;
+  slug: string;
+}
+
+interface DestinationData {
+  name_es: string;
+  name_en: string;
+  slug: string;
+}
 
 interface ContactRequest {
   id: string;
@@ -26,6 +43,21 @@ interface ContactRequest {
   message: string | null;
   status: string;
   created_at: string;
+  // New quote fields
+  travel_date: string | null;
+  departure_time: string | null;
+  return_date: string | null;
+  return_time: string | null;
+  departure_location: string | null;
+  departure_location_other: string | null;
+  destination_other: string | null;
+  number_of_passengers: number | null;
+  tour_id: string | null;
+  destination_id: string | null;
+  aircraft_selected: string | null;
+  // Joined data
+  air_tours: TourData | null;
+  destinations: DestinationData | null;
 }
 
 interface MessagesContentProps {
@@ -240,38 +272,206 @@ export default function MessagesContent({ user, messages: initialMessages }: Mes
 
               {/* Content */}
               <div className="p-4 space-y-4">
-                {/* Contact Info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {selectedMessage.phone && (
-                    <div className="flex items-center gap-2 text-navy-300">
-                      <PhoneIcon className="w-4 h-4 text-navy-500" />
-                      <a href={`tel:${selectedMessage.phone}`} className="hover:text-brand-400">
-                        {selectedMessage.phone}
-                      </a>
-                    </div>
-                  )}
-                  {selectedMessage.service_type && (
+                {/* Contact Info Section */}
+                <div className="p-4 bg-navy-800 rounded-lg">
+                  <p className="text-navy-400 text-xs font-semibold uppercase mb-3">Información de Contacto</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex items-center gap-2 text-navy-300">
                       <EnvelopeIcon className="w-4 h-4 text-navy-500" />
-                      <span>{serviceTypes[selectedMessage.service_type as keyof typeof serviceTypes] || selectedMessage.service_type}</span>
+                      <a href={`mailto:${selectedMessage.email}`} className="hover:text-brand-400">
+                        {selectedMessage.email}
+                      </a>
                     </div>
-                  )}
+                    {selectedMessage.phone && (
+                      <div className="flex items-center gap-2 text-navy-300">
+                        <PhoneIcon className="w-4 h-4 text-navy-500" />
+                        <a href={`tel:${selectedMessage.phone}`} className="hover:text-brand-400">
+                          {selectedMessage.phone}
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {selectedMessage.destination && (
-                  <div className="p-3 bg-navy-800 rounded-lg">
-                    <p className="text-navy-500 text-xs uppercase mb-1">Destino de interés</p>
-                    <p className="text-white">{selectedMessage.destination}</p>
+                {/* Service Type */}
+                {selectedMessage.service_type && (
+                  <div className="p-4 bg-navy-800 rounded-lg">
+                    <p className="text-navy-400 text-xs font-semibold uppercase mb-2">Tipo de Servicio</p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <PaperAirplaneIcon className="w-5 h-5 text-brand-400" />
+                        <span className="text-white font-medium">
+                          {serviceTypes[selectedMessage.service_type as keyof typeof serviceTypes] || selectedMessage.service_type}
+                        </span>
+                      </div>
+                      {/* Show Tour Name */}
+                      {selectedMessage.service_type === 'tour' && selectedMessage.air_tours && (
+                        <div className="pl-7">
+                          <p className="text-navy-500 text-xs mb-1">Tour seleccionado</p>
+                          <p className="text-brand-400 font-medium">{selectedMessage.air_tours.name_es}</p>
+                        </div>
+                      )}
+                      {/* Show Destination Name */}
+                      {selectedMessage.service_type === 'charter' && selectedMessage.destinations && (
+                        <div className="pl-7">
+                          <p className="text-navy-500 text-xs mb-1">Destino seleccionado</p>
+                          <p className="text-brand-400 font-medium">{selectedMessage.destinations.name_es}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Flight Details Section - Charter */}
+                {selectedMessage.service_type === 'charter' && (
+                  <div className="p-4 bg-navy-800 rounded-lg space-y-3">
+                    <p className="text-navy-400 text-xs font-semibold uppercase mb-3">Detalles del Vuelo Privado</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Travel Date */}
+                      {selectedMessage.travel_date && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Fecha de viaje</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <CalendarIcon className="w-4 h-4 text-navy-500" />
+                            <span>{new Date(selectedMessage.travel_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Departure Time */}
+                      {selectedMessage.departure_time && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Hora de salida</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <ClockIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.departure_time}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Return Date */}
+                      {selectedMessage.return_date && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Fecha de regreso</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <ArrowPathIcon className="w-4 h-4 text-navy-500" />
+                            <span>{new Date(selectedMessage.return_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Return Time */}
+                      {selectedMessage.return_time && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Hora de regreso</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <ClockIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.return_time}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Departure Location */}
+                      {selectedMessage.departure_location && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Saliendo desde</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <MapPinIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.departure_location_other || selectedMessage.departure_location}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Destination */}
+                      {selectedMessage.destination && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Destino</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <MapPinIcon className="w-4 h-4 text-brand-400" />
+                            <span className="font-medium">{selectedMessage.destination_other || selectedMessage.destination}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Number of Passengers */}
+                      {selectedMessage.number_of_passengers && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Número de pasajeros</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <UserGroupIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.number_of_passengers} pasajero{selectedMessage.number_of_passengers > 1 ? 's' : ''}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Aircraft Selected */}
+                      {selectedMessage.aircraft_selected && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Aeronave seleccionada</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <PaperAirplaneIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.aircraft_selected}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Flight Details Section - Tour */}
+                {selectedMessage.service_type === 'tour' && (
+                  <div className="p-4 bg-navy-800 rounded-lg space-y-3">
+                    <p className="text-navy-400 text-xs font-semibold uppercase mb-3">Detalles del Tour Aéreo</p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {/* Travel Date */}
+                      {selectedMessage.travel_date && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Fecha de viaje</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <CalendarIcon className="w-4 h-4 text-navy-500" />
+                            <span>{new Date(selectedMessage.travel_date).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Departure Time */}
+                      {selectedMessage.departure_time && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Hora de salida</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <ClockIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.departure_time}</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Number of Passengers */}
+                      {selectedMessage.number_of_passengers && (
+                        <div>
+                          <p className="text-navy-500 text-xs mb-1">Número de pasajeros</p>
+                          <div className="flex items-center gap-2 text-white">
+                            <UserGroupIcon className="w-4 h-4 text-navy-500" />
+                            <span>{selectedMessage.number_of_passengers} pasajero{selectedMessage.number_of_passengers > 1 ? 's' : ''}</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
 
                 {/* Message */}
-                <div className="p-4 bg-navy-800 rounded-lg">
-                  <p className="text-navy-500 text-xs uppercase mb-2">Mensaje</p>
-                  <p className="text-white whitespace-pre-wrap">
-                    {selectedMessage.message || 'Sin mensaje adicional'}
-                  </p>
-                </div>
+                {selectedMessage.message && (
+                  <div className="p-4 bg-navy-800 rounded-lg">
+                    <p className="text-navy-400 text-xs font-semibold uppercase mb-2">
+                      {selectedMessage.service_type === 'tour' ? 'Comentarios Personales' : 'Mensaje'}
+                    </p>
+                    <p className="text-white whitespace-pre-wrap">
+                      {selectedMessage.message}
+                    </p>
+                  </div>
+                )}
 
                 {/* Date */}
                 <p className="text-navy-500 text-sm">

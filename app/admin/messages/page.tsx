@@ -10,10 +10,22 @@ export default async function MessagesPage() {
     redirect('/admin/login');
   }
 
-  // Fetch contact requests
+  // Fetch contact requests with tour and destination names
   const { data: messages } = await supabase
     .from('contact_requests')
-    .select('*')
+    .select(`
+      *,
+      air_tours:tour_id (
+        name_es,
+        name_en,
+        slug
+      ),
+      destinations:destination_id (
+        name_es,
+        name_en,
+        slug
+      )
+    `)
     .order('created_at', { ascending: false });
 
   return <MessagesContent user={user} messages={messages || []} />;

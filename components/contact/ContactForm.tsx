@@ -257,12 +257,12 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
         </div>
         <h3 className="text-xl font-semibold mb-2">{labels.successTitle}</h3>
         <p className="text-muted mb-6">{labels.successMessage}</p>
-        <button
-          onClick={() => setSuccess(false)}
-          className="text-brand-500 hover:text-brand-600 font-medium"
+        <a
+          href={`/${locale}/contact`}
+          className="inline-block text-brand-500 hover:text-brand-600 font-medium transition-colors"
         >
           {labels.sendAnother}
-        </button>
+        </a>
       </div>
     );
   }
@@ -354,7 +354,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.travel_date}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -389,7 +389,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 name="return_date"
                 value={formData.return_date}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -449,7 +449,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                   value={formData.departure_location_other}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                 />
               </div>
             )}
@@ -491,7 +491,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                   value={formData.destination_other}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                 />
               </div>
             )}
@@ -538,7 +538,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 min="1"
                 max="20"
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -554,7 +554,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.travel_date}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -595,7 +595,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -611,7 +611,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -627,7 +627,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
               />
             </div>
 
@@ -642,7 +642,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
                 value={formData.message}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-3 rounded-lg border border-default bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none"
+                className="w-full px-4 py-3 rounded-lg border border-default bg-white dark:bg-navy-900 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all resize-none"
               />
             </div>
           </>
