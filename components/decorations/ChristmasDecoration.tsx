@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 
 // Dynamically import Lottie to avoid SSR issues
@@ -9,6 +9,18 @@ const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 export default function ChristmasDecoration() {
   const [isDecember, setIsDecember] = useState(false);
   const [animationData, setAnimationData] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const loadAnimation = useCallback((darkMode: boolean) => {
+    const animationFile = darkMode
+      ? '/animations/christmas-decoration-dark.json'
+      : '/animations/christmas-decoration-light.json';
+
+    fetch(animationFile)
+      .then(res => res.json())
+      .then(data => setAnimationData(data))
+      .catch(err => console.error('Error loading Christmas animation:', err));
+  }, []);
 
   useEffect(() => {
     // Check if current month is December (month 11 in JS, 0-indexed)
@@ -16,14 +28,34 @@ export default function ChristmasDecoration() {
     const isDecemberMonth = currentMonth === 11;
     setIsDecember(isDecemberMonth);
 
-    // Only load animation if it's December
-    if (isDecemberMonth) {
-      fetch('/animations/christmas-decoration.json')
-        .then(res => res.json())
-        .then(data => setAnimationData(data))
-        .catch(err => console.error('Error loading Christmas animation:', err));
-    }
-  }, []);
+    if (!isDecemberMonth) return;
+
+    // Check initial dark mode state
+    const checkDarkMode = () => document.documentElement.classList.contains('dark');
+    const initialDarkMode = checkDarkMode();
+    setIsDarkMode(initialDarkMode);
+    loadAnimation(initialDarkMode);
+
+    // Watch for theme changes using MutationObserver
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          const newDarkMode = checkDarkMode();
+          if (newDarkMode !== isDarkMode) {
+            setIsDarkMode(newDarkMode);
+            loadAnimation(newDarkMode);
+          }
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, [loadAnimation, isDarkMode]);
 
   // Don't render anything if it's not December or animation hasn't loaded
   if (!isDecember || !animationData) {
