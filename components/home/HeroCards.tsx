@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import {
   ClockIcon,
   CheckBadgeIcon,
@@ -11,6 +12,12 @@ import {
   StarIcon,
 } from '@heroicons/react/24/solid';
 import { useCurrency } from '@/contexts/CurrencyContext';
+
+// Dynamically import TripAdvisor widget to avoid SSR issues
+const TripAdvisorRatingWidget = dynamic(
+  () => import('@/components/widgets/TripAdvisorRatingWidget'),
+  { ssr: false }
+);
 
 interface FeaturedItem {
   id: string;
@@ -206,7 +213,7 @@ export default function HeroCards({ locale, featuredTour, featuredDestination, h
         </div>
       </div>
 
-      {/* TripAdvisor Widget Placeholder */}
+      {/* TripAdvisor Rating Widget */}
       <div className="card p-4">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 rounded-full bg-[#34E0A1]/10 flex items-center justify-center">
@@ -216,18 +223,7 @@ export default function HeroCards({ locale, featuredTour, featuredDestination, h
             <div className="text-sm font-medium">{t.tripAdvisorTitle}</div>
           </div>
         </div>
-        {/* TripAdvisor widget will be embedded here */}
-        <div className="bg-gray-100 dark:bg-navy-800 rounded-lg p-4 text-center">
-          <div className="flex justify-center gap-1 mb-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <StarIcon key={star} className="w-5 h-5 text-[#34E0A1]" />
-            ))}
-          </div>
-          <p className="text-xs text-muted">
-            {/* Placeholder - Replace with actual TripAdvisor widget */}
-            TripAdvisor Widget
-          </p>
-        </div>
+        <TripAdvisorRatingWidget />
       </div>
     </div>
   );
