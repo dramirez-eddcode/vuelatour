@@ -17,6 +17,11 @@ const nextConfig = {
         hostname: '*.supabase.in',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'static.tacdn.com',
+        pathname: '/**',
+      },
     ],
     // Image formats for optimization
     formats: ['image/avif', 'image/webp'],

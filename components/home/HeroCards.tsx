@@ -9,7 +9,6 @@ import {
   CheckBadgeIcon,
   UserGroupIcon,
   FireIcon,
-  StarIcon,
 } from '@heroicons/react/24/solid';
 import { useCurrency } from '@/contexts/CurrencyContext';
 
@@ -66,8 +65,6 @@ const translations = {
     certified: 'Operador Certificado',
     certifiedDesc: 'TAI & TAN',
     availableToday: 'Disponible hoy',
-    tripAdvisorTitle: 'Reseñas en TripAdvisor',
-    tripAdvisorCta: 'Ver reseñas',
   },
   en: {
     featured: 'Featured',
@@ -80,8 +77,6 @@ const translations = {
     certified: 'Certified Operator',
     certifiedDesc: 'TAI & TAN',
     availableToday: 'Available today',
-    tripAdvisorTitle: 'TripAdvisor Reviews',
-    tripAdvisorCta: 'See reviews',
   },
 };
 
@@ -214,16 +209,8 @@ export default function HeroCards({ locale, featuredTour, featuredDestination, h
       </div>
 
       {/* TripAdvisor Rating Widget */}
-      <div className="card p-4">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full bg-[#34E0A1]/10 flex items-center justify-center">
-            <StarIcon className="w-5 h-5 text-[#34E0A1]" />
-          </div>
-          <div>
-            <div className="text-sm font-medium">{t.tripAdvisorTitle}</div>
-          </div>
-        </div>
-        <TripAdvisorRatingWidget />
+      <div className="card p-3">
+        <TripAdvisorRatingWidget locale={locale} />
       </div>
     </div>
   );
