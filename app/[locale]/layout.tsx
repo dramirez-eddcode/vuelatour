@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
+import { Metadata, Viewport } from 'next';
 import Header from '@/components/layout/Header';
 import FooterWrapper from '@/components/layout/FooterWrapper';
 import { LazyCookieBanner } from '@/components/layout/LazyComponents';
@@ -18,6 +19,30 @@ const inter = Inter({
 });
 
 const locales = ['es', 'en'];
+
+// Global metadata base URL for all pages
+export const metadata: Metadata = {
+  metadataBase: new URL('https://vuelatour.com'),
+  icons: {
+    icon: '/images/logo/vuelatour-logo.png',
+    shortcut: '/images/logo/vuelatour-logo.png',
+    apple: '/images/logo/vuelatour-logo.png',
+  },
+  other: {
+    'msapplication-TileColor': '#102a43',
+  },
+};
+
+// Viewport configuration
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#102a43' },
+  ],
+};
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -39,6 +64,14 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <head>
+        {/* Preconnect to external domains for faster loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="dns-prefetch" href="https://static.tacdn.com" />
+
+        {/* Theme detection script */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
