@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import LazySection from '@/components/ui/LazySection';
+import { trackTripAdvisorClick } from '@/lib/analytics';
 
 interface TripAdvisorSectionProps {
   locale: string;
@@ -251,6 +252,7 @@ export default function TripAdvisorSection({ locale }: TripAdvisorSectionProps) 
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#00AA6C] hover:bg-[#009660] text-white font-medium rounded-lg transition-colors"
+            onClick={() => trackTripAdvisorClick()}
           >
             <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
               <Image

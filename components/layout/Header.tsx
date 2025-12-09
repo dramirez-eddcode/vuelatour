@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import ChristmasDecoration from '@/components/decorations/ChristmasDecoration';
+import { trackLanguageChange, trackEvent } from '@/lib/analytics';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -42,8 +43,13 @@ export default function Header() {
   };
 
   const changeLanguage = (newLocale: string) => {
+    trackLanguageChange(newLocale);
     const path = pathname.split('/').slice(2).join('/');
     router.push(`/${newLocale}/${path}`);
+  };
+
+  const handleCtaClick = (source: string) => {
+    trackEvent('cta_click', { source, cta_type: 'get_quote' });
   };
 
   const navLinks = [
@@ -129,6 +135,7 @@ export default function Header() {
             <Link
               href={`/${locale}/contact`}
               className="hidden md:inline-flex btn-primary text-sm"
+              onClick={() => handleCtaClick('header_desktop')}
             >
               {t('nav.getQuote')}
             </Link>
@@ -189,7 +196,10 @@ export default function Header() {
                 <Link
                   href={`/${locale}/contact`}
                   className="block w-full text-center btn-primary text-sm"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    handleCtaClick('header_mobile');
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   {t('nav.getQuote')}
                 </Link>
