@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
@@ -22,6 +22,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import LazySection from '@/components/ui/LazySection';
+import { trackItemView } from '@/lib/analytics';
 
 interface Benefit {
   key: string;
@@ -171,6 +172,11 @@ export default function DestinationDetailContent({
     ? destination.gallery_images
     : [];
   const hasGallery = galleryImages.length > 0;
+
+  // Track destination view on mount
+  useEffect(() => {
+    trackItemView('destination', name, destination.id);
+  }, [name, destination.id]);
 
   // Carousel and Lightbox state
   const [currentSlide, setCurrentSlide] = useState(0);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
@@ -26,6 +26,7 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import LazySection from '@/components/ui/LazySection';
+import { trackItemView } from '@/lib/analytics';
 
 interface Feature {
   key: string;
@@ -196,6 +197,11 @@ export default function TourDetailContent({
     ? tour.gallery_images
     : [];
   const hasGallery = galleryImages.length > 0;
+
+  // Track tour view on mount
+  useEffect(() => {
+    trackItemView('tour', name, tour.id);
+  }, [name, tour.id]);
 
   // Carousel and Lightbox state
   const [currentSlide, setCurrentSlide] = useState(0);

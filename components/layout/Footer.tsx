@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { getYearsOfExperienceFormatted } from '@/lib/constants';
+import { trackWhatsAppClick, trackPhoneClick, trackEmailClick } from '@/lib/analytics';
 
 interface Phone {
   display: string;
@@ -117,6 +118,11 @@ export default function Footer({ contactInfo }: FooterProps) {
                     rel="noopener noreferrer"
                     className="w-10 h-10 md:w-11 md:h-11 rounded-lg bg-navy-800 flex items-center justify-center text-gray-400 hover:text-brand-400 hover:bg-navy-700 transition-colors"
                     aria-label={social.label}
+                    onClick={() => {
+                      if (social.label === 'WhatsApp') {
+                        trackWhatsAppClick('footer_social');
+                      }
+                    }}
                   >
                     <social.icon className="w-5 h-5" />
                   </a>
@@ -201,6 +207,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                   <a
                     href={`tel:${phone.link}`}
                     className="text-sm text-gray-400 hover:text-white transition-colors"
+                    onClick={() => trackPhoneClick('footer')}
                   >
                     {phone.display}
                   </a>
@@ -211,6 +218,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <a
                   href={`mailto:${email}`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackEmailClick('footer')}
                 >
                   {email}
                 </a>

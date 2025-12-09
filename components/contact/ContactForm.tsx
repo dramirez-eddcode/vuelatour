@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { CheckCircleIcon, ExclamationCircleIcon, PaperAirplaneIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { trackContactFormSubmit, trackBookingClick } from '@/lib/analytics';
 
 interface SearchParams {
   destination?: string;
@@ -157,6 +158,18 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
         }]);
 
       if (insertError) throw insertError;
+
+      // Track successful form submission
+      const formType = formData.service_type === 'charter' ? 'charter_quote' :
+                       formData.service_type === 'tour' ? 'tour_quote' : 'contact';
+      trackContactFormSubmit(formType);
+
+      // Track booking click if it's a quote request
+      if (formData.service_type === 'charter' && formData.destination) {
+        trackBookingClick('destination', formData.destination);
+      } else if (formData.service_type === 'tour' && formData.tour) {
+        trackBookingClick('tour', formData.tour);
+      }
 
       // Send email notification to Vuelatour team
       try {
