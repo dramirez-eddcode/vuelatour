@@ -74,6 +74,7 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
       languages: {
         'es': `https://www.vuelatour.com/es/air-tours/${slug}`,
         'en': `https://www.vuelatour.com/en/air-tours/${slug}`,
+        'x-default': `https://www.vuelatour.com/en/air-tours/${slug}`,
       },
     },
   };
