@@ -31,11 +31,11 @@ export async function generateMetadata({ params }: CharterFlightsPageProps): Pro
     openGraph: {
       title,
       description,
-      url: `https://vuelatour.com/${locale}/charter-flights`,
+      url: `https://www.vuelatour.com/${locale}/charter-flights`,
       siteName: 'Vuelatour',
       images: [
         {
-          url: 'https://vuelatour.com/images/og/og-image.jpg',
+          url: 'https://www.vuelatour.com/images/og/og-image.jpg',
           width: 1200,
           height: 630,
           alt: locale === 'es' ? 'Vuelos privados en Cancún - Vuelatour' : 'Private charter flights in Cancún - Vuelatour',
@@ -48,13 +48,14 @@ export async function generateMetadata({ params }: CharterFlightsPageProps): Pro
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://vuelatour.com/images/og/og-image.jpg'],
+      images: ['https://www.vuelatour.com/images/og/og-image.jpg'],
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/charter-flights`,
+      canonical: `https://www.vuelatour.com/${locale}/charter-flights`,
       languages: {
-        'es': 'https://vuelatour.com/es/charter-flights',
-        'en': 'https://vuelatour.com/en/charter-flights',
+        'es': 'https://www.vuelatour.com/es/charter-flights',
+        'en': 'https://www.vuelatour.com/en/charter-flights',
+        'x-default': 'https://www.vuelatour.com/en/charter-flights',
       },
     },
   };

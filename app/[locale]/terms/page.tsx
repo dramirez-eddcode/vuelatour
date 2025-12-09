@@ -30,16 +30,17 @@ export async function generateMetadata({ params }: PageProps) {
     openGraph: {
       title: fullTitle,
       description,
-      url: `https://vuelatour.com/${locale}/terms`,
+      url: `https://www.vuelatour.com/${locale}/terms`,
       siteName: 'Vuelatour',
       locale: locale === 'es' ? 'es_MX' : 'en_US',
       type: 'website',
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/terms`,
+      canonical: `https://www.vuelatour.com/${locale}/terms`,
       languages: {
-        'es': 'https://vuelatour.com/es/terms',
-        'en': 'https://vuelatour.com/en/terms',
+        'es': 'https://www.vuelatour.com/es/terms',
+        'en': 'https://www.vuelatour.com/en/terms',
+        'x-default': 'https://www.vuelatour.com/en/terms',
       },
     },
     robots: {

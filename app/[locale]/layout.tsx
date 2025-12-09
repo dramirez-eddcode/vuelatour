@@ -22,7 +22,7 @@ const locales = ['es', 'en'];
 
 // Global metadata base URL for all pages
 export const metadata: Metadata = {
-  metadataBase: new URL('https://vuelatour.com'),
+  metadataBase: new URL('https://www.vuelatour.com'),
   icons: {
     icon: '/images/logo/vuelatour-logo.png',
     shortcut: '/images/logo/vuelatour-logo.png',
@@ -64,29 +64,29 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={inter.variable} suppressHydrationWarning>
       <head>
-        {/* Preconnect to external domains for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://static.tacdn.com" />
-
-        {/* Theme detection script */}
+      </head>
+      <body className={`${inter.className} antialiased`}>
+        {/* Theme detection script - must be inline to prevent FOUC */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                const stored = localStorage.getItem('theme');
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (stored === 'dark' || (!stored && prefersDark)) {
-                  document.documentElement.classList.add('dark');
-                }
+                try {
+                  const stored = localStorage.getItem('theme');
+                  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (stored === 'dark' || (!stored && prefersDark)) {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {}
               })();
             `,
           }}
         />
-      </head>
-      <body className={`${inter.className} antialiased`}>
         <NextIntlClientProvider messages={messages}>
           <CurrencyProvider>
             <LoadingProvider>

@@ -163,8 +163,8 @@ export async function generateMetadata({ params }: HomePageProps) {
 
   // Get OG image URL - use hero image if available, fallback to static
   const ogImageUrl = heroImage?.url
-    ? (heroImage.url.startsWith('http') ? heroImage.url : `https://vuelatour.com${heroImage.url}`)
-    : 'https://vuelatour.com/images/og/og-image.jpg';
+    ? (heroImage.url.startsWith('http') ? heroImage.url : `https://www.vuelatour.com${heroImage.url}`)
+    : 'https://www.vuelatour.com/images/og/og-image.jpg';
 
   const ogImageAlt = heroImage
     ? (locale === 'es' ? heroImage.alt_es : heroImage.alt_en) || 'Vuelatour'
@@ -190,7 +190,7 @@ export async function generateMetadata({ params }: HomePageProps) {
     openGraph: {
       title: titles[locale as keyof typeof titles] || titles.es,
       description: descriptions[locale as keyof typeof descriptions] || descriptions.es,
-      url: `https://vuelatour.com/${locale}`,
+      url: `https://www.vuelatour.com/${locale}`,
       siteName: 'Vuelatour',
       images: [
         {
@@ -210,10 +210,11 @@ export async function generateMetadata({ params }: HomePageProps) {
       images: [ogImageUrl],
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}`,
+      canonical: `https://www.vuelatour.com/${locale}`,
       languages: {
-        'es': 'https://vuelatour.com/es',
-        'en': 'https://vuelatour.com/en',
+        'es': 'https://www.vuelatour.com/es',
+        'en': 'https://www.vuelatour.com/en',
+        'x-default': 'https://www.vuelatour.com/en',
       },
     },
   };

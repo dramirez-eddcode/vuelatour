@@ -1,8 +1,10 @@
 # Robots.txt for Vuelatour
-# https://vuelatour.com
+# https://www.vuelatour.com
 
 User-agent: *
 Allow: /
+Allow: /en/
+Allow: /es/
 
 # Disallow admin and internal paths
 Disallow: /admin
@@ -10,5 +12,5 @@ Disallow: /admin/
 Disallow: /_next/
 Disallow: /api/
 
-# Sitemap location
-Sitemap: https://vuelatour.com/sitemap.xml
+# Sitemap location (use www version)
+Sitemap: https://www.vuelatour.com/sitemap.xml

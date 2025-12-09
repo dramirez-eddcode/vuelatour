@@ -38,8 +38,8 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
 
   // Get image URL - ensure it's absolute
   const imageUrl = destination.image_url
-    ? (destination.image_url.startsWith('http') ? destination.image_url : `https://vuelatour.com${destination.image_url}`)
-    : 'https://vuelatour.com/images/og/og-image.jpg';
+    ? (destination.image_url.startsWith('http') ? destination.image_url : `https://www.vuelatour.com${destination.image_url}`)
+    : 'https://www.vuelatour.com/images/og/og-image.jpg';
 
   return {
     title: metaTitle,
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
     openGraph: {
       title: metaTitle,
       description: metaDescription,
-      url: `https://vuelatour.com/${locale}/charter-flights/${slug}`,
+      url: `https://www.vuelatour.com/${locale}/charter-flights/${slug}`,
       siteName: 'Vuelatour',
       images: [
         {
@@ -70,10 +70,11 @@ export async function generateMetadata({ params }: DestinationDetailPageProps): 
       images: [imageUrl],
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/charter-flights/${slug}`,
+      canonical: `https://www.vuelatour.com/${locale}/charter-flights/${slug}`,
       languages: {
-        'es': `https://vuelatour.com/es/charter-flights/${slug}`,
-        'en': `https://vuelatour.com/en/charter-flights/${slug}`,
+        'es': `https://www.vuelatour.com/es/charter-flights/${slug}`,
+        'en': `https://www.vuelatour.com/en/charter-flights/${slug}`,
+        'x-default': `https://www.vuelatour.com/en/charter-flights/${slug}`,
       },
     },
   };

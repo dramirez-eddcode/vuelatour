@@ -30,16 +30,17 @@ export async function generateMetadata({ params }: PageProps) {
     openGraph: {
       title: fullTitle,
       description,
-      url: `https://vuelatour.com/${locale}/cookies`,
+      url: `https://www.vuelatour.com/${locale}/cookies`,
       siteName: 'Vuelatour',
       locale: locale === 'es' ? 'es_MX' : 'en_US',
       type: 'website',
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/cookies`,
+      canonical: `https://www.vuelatour.com/${locale}/cookies`,
       languages: {
-        'es': 'https://vuelatour.com/es/cookies',
-        'en': 'https://vuelatour.com/en/cookies',
+        'es': 'https://www.vuelatour.com/es/cookies',
+        'en': 'https://www.vuelatour.com/en/cookies',
+        'x-default': 'https://www.vuelatour.com/en/cookies',
       },
     },
     robots: {

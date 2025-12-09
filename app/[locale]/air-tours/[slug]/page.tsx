@@ -38,8 +38,8 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
 
   // Get image URL - ensure it's absolute
   const imageUrl = tour.image_url
-    ? (tour.image_url.startsWith('http') ? tour.image_url : `https://vuelatour.com${tour.image_url}`)
-    : 'https://vuelatour.com/images/og/og-image.jpg';
+    ? (tour.image_url.startsWith('http') ? tour.image_url : `https://www.vuelatour.com${tour.image_url}`)
+    : 'https://www.vuelatour.com/images/og/og-image.jpg';
 
   return {
     title: metaTitle,
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
     openGraph: {
       title: metaTitle,
       description: metaDescription,
-      url: `https://vuelatour.com/${locale}/air-tours/${slug}`,
+      url: `https://www.vuelatour.com/${locale}/air-tours/${slug}`,
       siteName: 'Vuelatour',
       images: [
         {
@@ -70,10 +70,10 @@ export async function generateMetadata({ params }: TourDetailPageProps): Promise
       images: [imageUrl],
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/air-tours/${slug}`,
+      canonical: `https://www.vuelatour.com/${locale}/air-tours/${slug}`,
       languages: {
-        'es': `https://vuelatour.com/es/air-tours/${slug}`,
-        'en': `https://vuelatour.com/en/air-tours/${slug}`,
+        'es': `https://www.vuelatour.com/es/air-tours/${slug}`,
+        'en': `https://www.vuelatour.com/en/air-tours/${slug}`,
       },
     },
   };

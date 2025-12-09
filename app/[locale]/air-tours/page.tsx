@@ -31,11 +31,11 @@ export async function generateMetadata({ params }: AirToursPageProps): Promise<M
     openGraph: {
       title,
       description,
-      url: `https://vuelatour.com/${locale}/air-tours`,
+      url: `https://www.vuelatour.com/${locale}/air-tours`,
       siteName: 'Vuelatour',
       images: [
         {
-          url: 'https://vuelatour.com/images/og/og-image.jpg',
+          url: 'https://www.vuelatour.com/images/og/og-image.jpg',
           width: 1200,
           height: 630,
           alt: locale === 'es' ? 'Tours aéreos en Cancún - Vuelatour' : 'Air tours in Cancún - Vuelatour',
@@ -48,13 +48,14 @@ export async function generateMetadata({ params }: AirToursPageProps): Promise<M
       card: 'summary_large_image',
       title,
       description,
-      images: ['https://vuelatour.com/images/og/og-image.jpg'],
+      images: ['https://www.vuelatour.com/images/og/og-image.jpg'],
     },
     alternates: {
-      canonical: `https://vuelatour.com/${locale}/air-tours`,
+      canonical: `https://www.vuelatour.com/${locale}/air-tours`,
       languages: {
-        'es': 'https://vuelatour.com/es/air-tours',
-        'en': 'https://vuelatour.com/en/air-tours',
+        'es': 'https://www.vuelatour.com/es/air-tours',
+        'en': 'https://www.vuelatour.com/en/air-tours',
+        'x-default': 'https://www.vuelatour.com/en/air-tours',
       },
     },
   };
