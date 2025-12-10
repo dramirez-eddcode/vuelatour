@@ -36,6 +36,7 @@ export function initializeAnalytics(): void {
     const script = document.createElement('script');
     script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
     script.async = true;
+    script.defer = true; // Defer execution for better performance
     document.head.appendChild(script);
   }
 
@@ -46,6 +47,8 @@ export function initializeAnalytics(): void {
   window.gtag('js', new Date());
   window.gtag('config', GA_MEASUREMENT_ID, {
     page_path: window.location.pathname,
+    // Performance optimization: send minimal data on initial load
+    send_page_view: true,
   });
 }
 
