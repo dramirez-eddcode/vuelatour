@@ -302,7 +302,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
         <p className="text-muted mb-6">{labels.successMessage}</p>
         <a
           href={`/${locale}/contact`}
-          className="inline-block text-brand-500 hover:text-brand-600 font-medium transition-colors"
+          className="inline-block text-brand-600 hover:text-brand-700 font-medium transition-colors"
         >
           {labels.sendAnother}
         </a>
@@ -353,7 +353,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
               </div>
               <a
                 href={`/${locale}/contact`}
-                className="text-xs text-muted hover:text-brand-500 transition-colors flex items-center gap-1"
+                className="text-xs text-muted hover:text-brand-600 transition-colors flex items-center gap-1"
               >
                 <XMarkIcon className="w-4 h-4" />
                 <span className="hidden sm:inline">{labels.clearSelection}</span>

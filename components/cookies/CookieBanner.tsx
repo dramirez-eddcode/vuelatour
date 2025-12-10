@@ -129,7 +129,7 @@ export default function CookieBanner() {
                   {t.description}{' '}
                   <Link
                     href={`/${locale}/cookies`}
-                    className="text-brand-500 hover:text-brand-600 underline"
+                    className="text-brand-600 hover:text-brand-700 underline"
                   >
                     {t.learnMore}
                   </Link>

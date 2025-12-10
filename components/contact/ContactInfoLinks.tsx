@@ -18,7 +18,7 @@ export function EmailLink({ email }: { email: string }) {
   return (
     <a
       href={`mailto:${email}`}
-      className="text-muted hover:text-brand-500 transition-colors"
+      className="text-muted hover:text-brand-600 transition-colors"
       onClick={() => trackEmailClick('contact_page')}
     >
       {email}
@@ -33,7 +33,7 @@ export function PhoneLinks({ phones }: { phones: Phone[] }) {
         <a
           key={`phone-${index}`}
           href={`tel:${phone.link}`}
-          className="block text-muted hover:text-brand-500 transition-colors"
+          className="block text-muted hover:text-brand-600 transition-colors"
           onClick={() => trackPhoneClick('contact_page')}
         >
           {phone.display}

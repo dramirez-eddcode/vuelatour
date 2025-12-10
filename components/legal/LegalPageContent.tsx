@@ -106,7 +106,7 @@ export default function LegalPageContent({ locale, page, fallbackTitle }: LegalP
                       a: ({ href, children }) => (
                         <a
                           href={href}
-                          className="text-brand-500 hover:text-brand-600 underline"
+                          className="text-brand-600 hover:text-brand-700 underline"
                           target="_blank"
                           rel="noopener noreferrer"
                         >
