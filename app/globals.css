@@ -164,7 +164,7 @@
 
   /* Button variants */
   .btn-primary {
-    background-color: rgb(var(--brand));
+    background-color: rgb(220 38 38); /* brand-600 for better contrast */
     color: white;
     font-weight: 500;
     padding: 0.75rem 1.5rem;
@@ -173,7 +173,7 @@
   }
 
   .btn-primary:hover {
-    background-color: rgb(220 38 38); /* Slightly darker red */
+    background-color: rgb(185 28 28); /* brand-700 */
     transform: translateY(-1px);
   }
 

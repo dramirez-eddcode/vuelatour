@@ -191,7 +191,7 @@ export default function AirToursContent({ locale, tours }: AirToursContentProps)
                       </div>
 
                       {/* CTA */}
-                        <div className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-500 group-hover:bg-brand-600 text-white font-semibold rounded-xl transition-colors">
+                        <div className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-600 group-hover:bg-brand-700 text-white font-semibold rounded-xl transition-colors">
                           <PhoneIcon className="w-4 h-4" />
                           {t.bookTour}
                         </div>

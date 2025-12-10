@@ -246,7 +246,7 @@ export default function ServicesSection({ locale, destinations, tours }: Service
             {/* Tours CTA */}
             <Link
               href={`/${locale}/air-tours`}
-              className="group flex items-center justify-center gap-2 w-full mt-6 py-4 text-sm font-semibold text-white bg-brand-500 hover:bg-brand-600 rounded-xl transition-all duration-300"
+              className="group flex items-center justify-center gap-2 w-full mt-6 py-4 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all duration-300"
             >
               {hasMoreTours
                 ? (locale === 'es' ? `Ver los ${tours.length} tours` : `View all ${tours.length} tours`)

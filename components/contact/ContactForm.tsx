@@ -703,7 +703,7 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-4 bg-brand-500 hover:bg-brand-600 disabled:bg-brand-500/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
+          className="w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 disabled:bg-brand-600/50 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
         >
           {loading ? labels.sending : labels.submit}
         </button>

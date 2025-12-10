@@ -151,7 +151,7 @@ export default function CookieBanner() {
                 </button>
                 <button
                   onClick={acceptAll}
-                  className="px-4 py-2.5 text-sm font-medium rounded-xl bg-brand-500 text-white hover:bg-brand-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium rounded-xl bg-brand-600 text-white hover:bg-brand-700 transition-colors"
                 >
                   {t.acceptAll}
                 </button>
@@ -209,7 +209,7 @@ export default function CookieBanner() {
                 >
                   <div
                     className={`w-11 h-6 rounded-full transition-colors ${
-                      consent.analytics ? 'bg-brand-500' : 'bg-gray-300 dark:bg-navy-600'
+                      consent.analytics ? 'bg-brand-600' : 'bg-gray-300 dark:bg-navy-600'
                     }`}
                   >
                     <div
@@ -225,7 +225,7 @@ export default function CookieBanner() {
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={saveSettings}
-                className="flex-1 px-4 py-2.5 text-sm font-medium rounded-xl bg-brand-500 text-white hover:bg-brand-600 transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm font-medium rounded-xl bg-brand-600 text-white hover:bg-brand-700 transition-colors"
               >
                 {t.save}
               </button>

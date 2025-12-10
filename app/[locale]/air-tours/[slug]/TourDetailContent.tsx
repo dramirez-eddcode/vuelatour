@@ -342,7 +342,7 @@ export default function TourDetailContent({
                       </p>
                       <Link
                         href={`/${locale}/contact?tour=${tour.slug}&aircraft=${encodeURIComponent(pricing.aircraft_name)}&price=${pricing.price_usd}`}
-                        className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors"
+                        className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-xl transition-colors"
                         onClick={() => trackBookingClick('tour', name)}
                       >
                         <GlobeAmericasIcon className="w-5 h-5" />
