@@ -16,5 +16,38 @@ export default async function ImagesPage() {
     .select('*')
     .order('category', { ascending: true });
 
-  return <ImagesContent user={user} images={images || []} />;
+  // Get file sizes for each image from Supabase Storage
+  const imagesWithSize = await Promise.all(
+    (images || []).map(async (image) => {
+      try {
+        // Extract path from Supabase Storage URL
+        const urlObj = new URL(image.url);
+        const pathMatch = urlObj.pathname.match(/\/storage\/v1\/object\/public\/images\/(.+)/);
+
+        if (pathMatch && pathMatch[1]) {
+          const filePath = decodeURIComponent(pathMatch[1]);
+
+          // Get file metadata from storage
+          const { data: fileData, error } = await supabase.storage
+            .from('images')
+            .list(filePath.split('/').slice(0, -1).join('/'), {
+              search: filePath.split('/').pop(),
+            });
+
+          if (!error && fileData && fileData.length > 0) {
+            return {
+              ...image,
+              file_size: fileData[0].metadata?.size || null,
+            };
+          }
+        }
+      } catch (err) {
+        console.error('Error getting file size for', image.key, err);
+      }
+
+      return { ...image, file_size: null };
+    })
+  );
+
+  return <ImagesContent user={user} images={imagesWithSize} />;
 }

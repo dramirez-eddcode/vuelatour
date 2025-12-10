@@ -31,6 +31,7 @@ interface SiteImage {
   alt_en: string | null;
   category: string | null;
   is_primary: boolean;
+  file_size?: number | null; // Size in bytes
 }
 
 interface ImagesContentProps {
@@ -179,6 +180,20 @@ const emptyImage: Omit<SiteImage, 'id'> = {
   alt_en: '',
   category: 'other',
   is_primary: false,
+  file_size: null,
+};
+
+// Helper para formatear el tamaño de archivo
+const formatFileSize = (bytes: number | null | undefined): string => {
+  if (!bytes) return '—';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+};
+
+// Helper para determinar si una imagen es pesada (>100KB)
+const isHeavyImage = (bytes: number | null | undefined): boolean => {
+  return bytes ? bytes > 100 * 1024 : false;
 };
 
 export default function ImagesContent({ user, images: initialImages }: ImagesContentProps) {
@@ -387,6 +402,7 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
   const CategorySection = ({ category }: { category: typeof categories[0] }) => {
     const categoryImages = getImagesByCategory(category.value);
     const config = getCategoryConfig(category.value);
+    const heavyImages = categoryImages.filter(img => isHeavyImage(img.file_size));
 
     return (
       <div className="bg-navy-900 rounded-xl border border-navy-800 overflow-hidden">
@@ -396,11 +412,16 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
             <div className="flex items-start gap-3">
               <span className="text-2xl">{category.icon}</span>
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h3 className="text-lg font-semibold text-white">{category.label}</h3>
                   <span className={`px-2 py-0.5 text-xs font-medium rounded-full border ${config.color}`}>
                     {categoryImages.length} {categoryImages.length === 1 ? 'imagen' : 'imágenes'}
                   </span>
+                  {heavyImages.length > 0 && (
+                    <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                      ⚠️ {heavyImages.length} pesada{heavyImages.length > 1 ? 's' : ''} (&gt;100KB)
+                    </span>
+                  )}
                   {config.hasCarousel && (
                     <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
                       <RectangleStackIcon className="w-3 h-3" />
@@ -585,6 +606,16 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
                     </div>
                   )}
 
+                  {/* Badge de tamaño de archivo */}
+                  <div className={`absolute top-2 right-2 px-2 py-1 text-xs font-bold rounded-md flex items-center gap-1 ${
+                    isHeavyImage(image.file_size)
+                      ? 'bg-red-500/90 text-white border border-red-400'
+                      : 'bg-black/70 text-white'
+                  }`}>
+                    {formatFileSize(image.file_size)}
+                    {isHeavyImage(image.file_size) && ' ⚠️'}
+                  </div>
+
                   {/* Overlay con acciones */}
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button
@@ -650,14 +681,31 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
     );
   };
 
+  const totalSize = images.reduce((acc, img) => acc + (img.file_size || 0), 0);
+  const heavyImagesCount = images.filter(img => isHeavyImage(img.file_size)).length;
+
   return (
     <AdminLayout userEmail={user.email || ''}>
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-white">Imágenes del Sitio</h1>
-          <p className="text-navy-400 mt-1">
-            Gestiona las imágenes organizadas por sección. Total: {images.length} imágenes
-          </p>
+          <div className="flex items-center gap-3 mt-2 flex-wrap">
+            <p className="text-navy-400">
+              Total: {images.length} imágenes
+            </p>
+            <span className="text-navy-600">•</span>
+            <p className="text-navy-400">
+              Peso total: {formatFileSize(totalSize)}
+            </p>
+            {heavyImagesCount > 0 && (
+              <>
+                <span className="text-navy-600">•</span>
+                <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
+                  ⚠️ {heavyImagesCount} pesada{heavyImagesCount > 1 ? 's' : ''} (&gt;100KB)
+                </span>
+              </>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Toggle de vista */}
@@ -783,6 +831,16 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
                     {/* Category badge */}
                     <div className={`absolute top-2 left-2 px-2 py-1 text-xs font-medium rounded-md border ${config.color}`}>
                       {config.icon} {config.label}
+                    </div>
+
+                    {/* File size badge */}
+                    <div className={`absolute bottom-2 right-2 px-2 py-1 text-xs font-bold rounded-md ${
+                      isHeavyImage(image.file_size)
+                        ? 'bg-red-500/90 text-white border border-red-400'
+                        : 'bg-black/70 text-white'
+                    }`}>
+                      {formatFileSize(image.file_size)}
+                      {isHeavyImage(image.file_size) && ' ⚠️'}
                     </div>
 
                     {/* Carousel indicator */}
