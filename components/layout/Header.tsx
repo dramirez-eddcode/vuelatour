@@ -124,7 +124,10 @@ export default function Header() {
             <button
               onClick={toggleDarkMode}
               className="p-2 rounded-lg bg-navy-800 text-gray-300 hover:text-white transition-colors"
-              aria-label="Toggle theme"
+              aria-label={darkMode
+                ? (locale === 'es' ? 'Cambiar a modo claro' : 'Switch to light mode')
+                : (locale === 'es' ? 'Cambiar a modo oscuro' : 'Switch to dark mode')
+              }
             >
               {darkMode ? (
                 <SunIcon className="w-5 h-5" />
@@ -146,6 +149,11 @@ export default function Header() {
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 rounded-lg bg-navy-800 text-gray-300 hover:text-white transition-colors"
+              aria-label={mobileMenuOpen
+                ? (locale === 'es' ? 'Cerrar menú de navegación' : 'Close navigation menu')
+                : (locale === 'es' ? 'Abrir menú de navegación' : 'Open navigation menu')
+              }
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? (
                 <XMarkIcon className="w-6 h-6" />

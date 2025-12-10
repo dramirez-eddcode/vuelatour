@@ -91,6 +91,8 @@ export default function CookieBanner() {
       analyticsDesc: 'Nos ayudan a entender cómo usas el sitio para mejorarlo (Google Analytics).',
       save: 'Guardar preferencias',
       learnMore: 'Más información sobre nuestra política de cookies',
+      closeSettings: 'Cerrar configuración de cookies',
+      toggleAnalytics: 'Activar/desactivar cookies de análisis',
     },
     en: {
       title: 'We use cookies',
@@ -105,6 +107,8 @@ export default function CookieBanner() {
       analyticsDesc: 'Help us understand how you use the site to improve it (Google Analytics).',
       save: 'Save preferences',
       learnMore: 'Learn more about our cookie policy',
+      closeSettings: 'Close cookie settings',
+      toggleAnalytics: 'Toggle analytics cookies',
     },
   };
 
@@ -164,6 +168,7 @@ export default function CookieBanner() {
               <button
                 onClick={() => setShowSettings(false)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-navy-800 rounded-lg transition-colors"
+                aria-label={t.closeSettings}
               >
                 <XMarkIcon className="w-5 h-5" />
               </button>
@@ -198,6 +203,9 @@ export default function CookieBanner() {
                 <button
                   onClick={() => setConsent(prev => ({ ...prev, analytics: !prev.analytics }))}
                   className="relative flex-shrink-0"
+                  aria-label={t.toggleAnalytics}
+                  role="switch"
+                  aria-checked={consent.analytics}
                 >
                   <div
                     className={`w-11 h-6 rounded-full transition-colors ${
