@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { FaFacebook, FaInstagram, FaTiktok, FaWhatsapp, FaYoutube } from 'react-icons/fa';
 import { getYearsOfExperienceFormatted } from '@/lib/constants';
-import { trackWhatsAppClick, trackPhoneClick, trackEmailClick } from '@/lib/analytics';
+import { trackWhatsAppClick, trackPhoneClick, trackEmailClick, trackNavigation } from '@/lib/analytics';
 
 interface Phone {
   display: string;
@@ -139,6 +139,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/charter-flights`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('nav.charterFlights'), 'footer')}
                 >
                   {t('nav.charterFlights')}
                 </Link>
@@ -147,6 +148,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/air-tours`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('nav.airTours'), 'footer')}
                 >
                   {t('nav.airTours')}
                 </Link>
@@ -155,6 +157,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/contact`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('nav.contact'), 'footer')}
                 >
                   {t('nav.contact')}
                 </Link>
@@ -170,6 +173,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/terms`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('footer.terms'), 'footer')}
                 >
                   {t('footer.terms')}
                 </Link>
@@ -178,6 +182,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/privacy`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('footer.privacy'), 'footer')}
                 >
                   {t('footer.privacy')}
                 </Link>
@@ -186,6 +191,7 @@ export default function Footer({ contactInfo }: FooterProps) {
                 <Link
                   href={`/${locale}/cookies`}
                   className="text-sm text-gray-400 hover:text-white transition-colors"
+                  onClick={() => trackNavigation(t('footer.cookies'), 'footer')}
                 >
                   {t('footer.cookies')}
                 </Link>

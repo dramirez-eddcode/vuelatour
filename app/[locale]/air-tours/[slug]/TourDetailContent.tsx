@@ -26,7 +26,7 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import LazySection from '@/components/ui/LazySection';
-import { trackItemView } from '@/lib/analytics';
+import { trackItemView, trackBookingClick } from '@/lib/analytics';
 
 interface Feature {
   key: string;
@@ -343,6 +343,7 @@ export default function TourDetailContent({
                       <Link
                         href={`/${locale}/contact?tour=${tour.slug}&aircraft=${encodeURIComponent(pricing.aircraft_name)}&price=${pricing.price_usd}`}
                         className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl transition-colors"
+                        onClick={() => trackBookingClick('tour', name)}
                       >
                         <GlobeAmericasIcon className="w-5 h-5" />
                         {t.bookNow}

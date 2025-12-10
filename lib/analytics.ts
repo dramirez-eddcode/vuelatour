@@ -172,3 +172,22 @@ export function trackScrollDepth(percentage: number): void {
     depth_percentage: percentage,
   });
 }
+
+// Track when users view a list of items (destinations or tours listing page)
+export function trackViewItemList(listType: 'destinations' | 'tours', itemCount: number): void {
+  trackEvent('view_item_list', {
+    event_category: 'engagement',
+    item_list_id: listType,
+    item_list_name: listType === 'destinations' ? 'Charter Flights' : 'Air Tours',
+    item_count: itemCount,
+  });
+}
+
+// Track navigation menu clicks
+export function trackNavigation(linkName: string, location: 'header' | 'footer'): void {
+  trackEvent('navigation_click', {
+    event_category: 'navigation',
+    link_name: linkName,
+    location: location,
+  });
+}

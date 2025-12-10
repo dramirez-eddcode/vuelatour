@@ -7,6 +7,7 @@ import Header from '@/components/layout/Header';
 import FooterWrapper from '@/components/layout/FooterWrapper';
 import { LazyCookieBanner } from '@/components/layout/LazyComponents';
 import AnalyticsProvider from '@/components/analytics/AnalyticsProvider';
+import ScrollTracker from '@/components/analytics/ScrollTracker';
 import { CurrencyProvider } from '@/contexts/CurrencyContext';
 import { LoadingProvider } from '@/contexts/LoadingContext';
 import '../globals.css';
@@ -97,6 +98,7 @@ export default async function LocaleLayout({
           <CurrencyProvider>
             <LoadingProvider>
               <AnalyticsProvider>
+                <ScrollTracker />
                 <Header />
                 <main>{children}</main>
                 <FooterWrapper />

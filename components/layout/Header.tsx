@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import ChristmasDecoration from '@/components/decorations/ChristmasDecoration';
-import { trackLanguageChange, trackEvent } from '@/lib/analytics';
+import { trackLanguageChange, trackEvent, trackNavigation } from '@/lib/analytics';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -93,6 +93,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                onClick={() => trackNavigation(link.label, 'header')}
               >
                 {link.label}
               </Link>
@@ -163,7 +164,10 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   className="px-4 py-3 text-sm font-medium rounded-lg text-gray-200 hover:bg-navy-800 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    trackNavigation(link.label, 'header');
+                    setMobileMenuOpen(false);
+                  }}
                 >
                   {link.label}
                 </Link>

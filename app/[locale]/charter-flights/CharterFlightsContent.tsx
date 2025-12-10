@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -10,6 +11,7 @@ import {
   PhoneIcon,
 } from '@heroicons/react/24/outline';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { trackViewItemList } from '@/lib/analytics';
 import LazySection from '@/components/ui/LazySection';
 
 interface AircraftPricing {
@@ -80,6 +82,11 @@ const translations = {
 export default function CharterFlightsContent({ locale, destinations }: CharterFlightsContentProps) {
   const t = translations[locale as keyof typeof translations] || translations.es;
   const { formatPrice, currency } = useCurrency();
+
+  // Track view_item_list event when page loads
+  useEffect(() => {
+    trackViewItemList('destinations', destinations.length);
+  }, [destinations.length]);
 
   return (
     <main className="min-h-screen pt-20">
