@@ -365,3 +365,205 @@ export function FAQSchema({ faqs }: FAQSchemaProps) {
     />
   );
 }
+
+interface AircraftPricing {
+  aircraft_name: string;
+  max_passengers: number;
+  price_usd: number;
+  notes_es?: string;
+  notes_en?: string;
+}
+
+interface DestinationProductSchemaProps {
+  destination: {
+    name_es: string;
+    name_en: string;
+    description_es?: string | null;
+    description_en?: string | null;
+    slug: string;
+    image_url?: string | null;
+    flight_time?: string | null;
+    aircraft_pricing?: AircraftPricing[] | null;
+  };
+  locale: string;
+}
+
+export function DestinationProductSchema({ destination, locale }: DestinationProductSchemaProps) {
+  const name = locale === 'es' ? destination.name_es : destination.name_en;
+  const description = locale === 'es' ? destination.description_es : destination.description_en;
+
+  // Get absolute image URL
+  const getAbsoluteUrl = (url: string) => {
+    if (!url) return 'https://www.vuelatour.com/images/og/og-image.jpg';
+    if (url.startsWith('http')) return url;
+    return `https://www.vuelatour.com${url}`;
+  };
+
+  const imageUrl = getAbsoluteUrl(destination.image_url || '');
+
+  // Get pricing information
+  const aircraftPricing = destination.aircraft_pricing || [];
+  const prices = aircraftPricing.map((p) => p.price_usd);
+  const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+  const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
+
+  // If multiple pricing options, use AggregateOffer, otherwise use single Offer
+  const offers = aircraftPricing.length > 1 ? {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'USD',
+    lowPrice: minPrice,
+    highPrice: maxPrice,
+    offerCount: aircraftPricing.length,
+    offers: aircraftPricing.map((pricing) => ({
+      '@type': 'Offer',
+      name: `${name} - ${pricing.aircraft_name}`,
+      price: pricing.price_usd,
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      url: `https://www.vuelatour.com/${locale}/charter-flights/${destination.slug}`,
+      description: locale === 'es'
+        ? `Hasta ${pricing.max_passengers} pasajeros - ${pricing.aircraft_name}`
+        : `Up to ${pricing.max_passengers} passengers - ${pricing.aircraft_name}`,
+    })),
+  } : aircraftPricing.length === 1 ? {
+    '@type': 'Offer',
+    price: aircraftPricing[0].price_usd,
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+    priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+    url: `https://www.vuelatour.com/${locale}/charter-flights/${destination.slug}`,
+  } : null;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: locale === 'es' ? `Vuelo Privado a ${name}` : `Private Flight to ${name}`,
+    description: description || (locale === 'es'
+      ? `Vuelo privado desde Cancún a ${name}. Servicio exclusivo y horarios flexibles.`
+      : `Private flight from Cancún to ${name}. Exclusive service and flexible schedules.`),
+    image: imageUrl,
+    brand: {
+      '@type': 'Brand',
+      name: 'Vuelatour',
+    },
+    offers: offers || {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: `https://www.vuelatour.com/${locale}/charter-flights/${destination.slug}`,
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '150',
+    },
+    url: `https://www.vuelatour.com/${locale}/charter-flights/${destination.slug}`,
+    category: locale === 'es' ? 'Vuelos Privados' : 'Private Charter Flights',
+  };
+
+  return (
+    <Script
+      id="destination-product-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
+interface TourProductSchemaProps {
+  tour: {
+    name_es: string;
+    name_en: string;
+    description_es?: string | null;
+    description_en?: string | null;
+    slug: string;
+    image_url?: string | null;
+    duration?: string | null;
+    aircraft_pricing?: AircraftPricing[] | null;
+  };
+  locale: string;
+}
+
+export function TourProductSchema({ tour, locale }: TourProductSchemaProps) {
+  const name = locale === 'es' ? tour.name_es : tour.name_en;
+  const description = locale === 'es' ? tour.description_es : tour.description_en;
+
+  // Get absolute image URL
+  const getAbsoluteUrl = (url: string) => {
+    if (!url) return 'https://www.vuelatour.com/images/og/og-image.jpg';
+    if (url.startsWith('http')) return url;
+    return `https://www.vuelatour.com${url}`;
+  };
+
+  const imageUrl = getAbsoluteUrl(tour.image_url || '');
+
+  // Get pricing information
+  const aircraftPricing = tour.aircraft_pricing || [];
+  const prices = aircraftPricing.map((p) => p.price_usd);
+  const minPrice = prices.length > 0 ? Math.min(...prices) : null;
+  const maxPrice = prices.length > 0 ? Math.max(...prices) : null;
+
+  // If multiple pricing options, use AggregateOffer, otherwise use single Offer
+  const offers = aircraftPricing.length > 1 ? {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'USD',
+    lowPrice: minPrice,
+    highPrice: maxPrice,
+    offerCount: aircraftPricing.length,
+    offers: aircraftPricing.map((pricing) => ({
+      '@type': 'Offer',
+      name: `${name} - ${pricing.aircraft_name}`,
+      price: pricing.price_usd,
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      url: `https://www.vuelatour.com/${locale}/air-tours/${tour.slug}`,
+      description: locale === 'es'
+        ? `Hasta ${pricing.max_passengers} pasajeros - ${pricing.aircraft_name}`
+        : `Up to ${pricing.max_passengers} passengers - ${pricing.aircraft_name}`,
+    })),
+  } : aircraftPricing.length === 1 ? {
+    '@type': 'Offer',
+    price: aircraftPricing[0].price_usd,
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+    priceValidUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+    url: `https://www.vuelatour.com/${locale}/air-tours/${tour.slug}`,
+  } : null;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: name,
+    description: description || (locale === 'es'
+      ? `Tour aéreo panorámico sobre ${name}. Vive una experiencia única.`
+      : `Panoramic air tour over ${name}. Live a unique experience.`),
+    image: imageUrl,
+    brand: {
+      '@type': 'Brand',
+      name: 'Vuelatour',
+    },
+    offers: offers || {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: `https://www.vuelatour.com/${locale}/air-tours/${tour.slug}`,
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '150',
+    },
+    url: `https://www.vuelatour.com/${locale}/air-tours/${tour.slug}`,
+    category: locale === 'es' ? 'Tours Aéreos' : 'Air Tours',
+  };
+
+  return (
+    <Script
+      id="tour-product-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

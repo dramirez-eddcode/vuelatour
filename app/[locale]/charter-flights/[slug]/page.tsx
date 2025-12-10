@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient, createBuildClient } from '@/lib/supabase/server';
 import DestinationDetailContent from './DestinationDetailContent';
+import { DestinationProductSchema, BreadcrumbSchema } from '@/components/seo/SchemaMarkup';
 
 interface DestinationDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -131,12 +132,27 @@ export default async function DestinationDetailPage({ params }: DestinationDetai
     .eq('is_active', true)
     .order('display_order', { ascending: true });
 
+  const name = locale === 'es' ? destination.name_es : destination.name_en;
+
+  // Breadcrumb for SEO
+  const breadcrumbItems = [
+    { name: 'Home', url: `/${locale}` },
+    { name: locale === 'es' ? 'Vuelos Privados' : 'Charter Flights', url: `/${locale}/charter-flights` },
+    { name: name, url: `/${locale}/charter-flights/${slug}` },
+  ];
+
   return (
-    <DestinationDetailContent
-      locale={locale}
-      destination={destination}
-      otherDestinations={otherDestinations || []}
-      availableServices={availableServices || []}
-    />
+    <>
+      {/* SEO Schema Markup */}
+      <DestinationProductSchema destination={destination} locale={locale} />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
+      <DestinationDetailContent
+        locale={locale}
+        destination={destination}
+        otherDestinations={otherDestinations || []}
+        availableServices={availableServices || []}
+      />
+    </>
   );
 }

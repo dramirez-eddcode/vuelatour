@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { createClient, createBuildClient } from '@/lib/supabase/server';
 import TourDetailContent from './TourDetailContent';
+import { TourProductSchema, BreadcrumbSchema } from '@/components/seo/SchemaMarkup';
 
 interface TourDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -131,12 +132,27 @@ export default async function TourDetailPage({ params }: TourDetailPageProps) {
     .eq('is_active', true)
     .order('display_order', { ascending: true });
 
+  const name = locale === 'es' ? tour.name_es : tour.name_en;
+
+  // Breadcrumb for SEO
+  const breadcrumbItems = [
+    { name: 'Home', url: `/${locale}` },
+    { name: locale === 'es' ? 'Tours Aéreos' : 'Air Tours', url: `/${locale}/air-tours` },
+    { name: name, url: `/${locale}/air-tours/${slug}` },
+  ];
+
   return (
-    <TourDetailContent
-      locale={locale}
-      tour={tour}
-      otherTours={otherTours || []}
-      availableServices={availableServices || []}
-    />
+    <>
+      {/* SEO Schema Markup */}
+      <TourProductSchema tour={tour} locale={locale} />
+      <BreadcrumbSchema items={breadcrumbItems} />
+
+      <TourDetailContent
+        locale={locale}
+        tour={tour}
+        otherTours={otherTours || []}
+        availableServices={availableServices || []}
+      />
+    </>
   );
 }
