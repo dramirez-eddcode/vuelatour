@@ -111,7 +111,7 @@ export default function Header() {
                   onClick={() => changeLanguage(lang)}
                   className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                     locale === lang
-                      ? 'bg-brand-500 text-white'
+                      ? 'bg-brand-600 text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
                 >
@@ -194,7 +194,7 @@ export default function Header() {
                       }}
                       className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
                         locale === lang
-                          ? 'bg-brand-500 text-white'
+                          ? 'bg-brand-600 text-white'
                           : 'bg-navy-800 text-gray-300'
                       }`}
                     >

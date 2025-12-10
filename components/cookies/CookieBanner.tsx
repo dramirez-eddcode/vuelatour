@@ -188,7 +188,7 @@ export default function CookieBanner() {
                     disabled
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-brand-500 rounded-full opacity-50 cursor-not-allowed">
+                  <div className="w-11 h-6 bg-brand-600 rounded-full opacity-50 cursor-not-allowed">
                     <div className="absolute top-0.5 left-[22px] w-5 h-5 bg-white rounded-full shadow" />
                   </div>
                 </div>

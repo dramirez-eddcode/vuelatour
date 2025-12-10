@@ -133,7 +133,7 @@ export default function HeroCards({ locale, featuredTour, featuredDestination, h
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
               {/* Badge - shows "Most Popular" if based on real data, "Featured" otherwise */}
-              <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-brand-500 text-white text-xs font-medium">
+              <div className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full bg-brand-600 text-white text-xs font-medium">
                 <FireIcon className="w-3 h-3" />
                 {hasPopularData ? t.popular : t.featured}
               </div>

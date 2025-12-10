@@ -431,7 +431,7 @@ export default function TourDetailContent({
                       <ReactMarkdown
                         components={{
                           h2: ({ children }) => <h2 className="text-xl font-bold mt-6 mb-3 text-foreground">{children}</h2>,
-                          h3: ({ children }) => <h3 className="text-lg font-semibold mt-4 mb-2 text-foreground">{children}</h3>,
+                          h3: ({ children }) => <h2 className="text-lg font-semibold mt-4 mb-2 text-foreground">{children}</h2>,
                           p: ({ children }) => <p className="text-muted leading-relaxed mb-4">{children}</p>,
                           ul: ({ children }) => <ul className="list-disc list-inside text-muted space-y-1 mb-4">{children}</ul>,
                           ol: ({ children }) => <ol className="list-decimal list-inside text-muted space-y-1 mb-4">{children}</ol>,
