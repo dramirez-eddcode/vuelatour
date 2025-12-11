@@ -255,6 +255,22 @@ export default function Footer({ contactInfo }: FooterProps) {
               <span>{getYearsOfExperienceFormatted()} {t('footer.yearsExperience')}</span>
             </div>
           </div>
+          {/* Developer Credit */}
+          <div className="mt-4 pt-4 border-t border-navy-800/50 text-center">
+            <p className="text-xs text-gray-500">
+              {locale === 'es' ? 'Creado con' : 'Made with'}{' '}
+              <span className="text-brand-500">♥</span>{' '}
+              {locale === 'es' ? 'por' : 'by'}{' '}
+              <a
+                href="https://www.eddcode.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                EDDCODE
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
