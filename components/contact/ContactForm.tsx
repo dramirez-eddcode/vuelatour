@@ -269,9 +269,9 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
       ? 'Nos pondremos en contacto contigo con una oferta sin compromiso en 24 horas. ¡Gracias por elegirnos! ¿Quieres ver más? ¡Echa un vistazo a nuestros otros Tours Aéreos!'
       : 'We will reach out to you with a non binding offer within 24 hours. Thank you for choosing us! Want to see more? Have a look at our other Air Tours!',
     travelDate: locale === 'es' ? 'Fecha de viaje (YYYY-MM-DD)' : 'Travel Date (YYYY-MM-DD)',
-    departureTime: locale === 'es' ? 'Hora de salida' : 'Time of departure',
+    departureTime: locale === 'es' ? 'Hora de salida (hora de Cancún, México)' : 'Time of departure (Cancún, Mexico time)',
     returnDate: locale === 'es' ? 'Si es necesario, Fecha de regreso (YYYY-MM-DD)' : 'If required, Date of return (YYYY-MM-DD)',
-    returnTime: locale === 'es' ? 'Hora de salida el día de regreso' : 'Time of departure on the day of return',
+    returnTime: locale === 'es' ? 'Hora de regreso (hora de Cancún, México)' : 'Time of return (Cancún, Mexico time)',
     departingFrom: locale === 'es' ? 'Saliendo desde...' : 'Departing from...',
     departingFromOther: locale === 'es' ? 'En caso de haber seleccionado "Otra Ubicación"' : 'In case of having selected "Other Location"',
     wantToGoTo: locale === 'es' ? 'Quiero ir a...' : 'I want to go to...',
