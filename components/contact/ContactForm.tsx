@@ -133,6 +133,13 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
         tour_id = tour?.id || null;
       }
 
+      // Helper to ensure dates are stored correctly without timezone shift
+      // Append T12:00:00 to treat as noon local time, avoiding UTC midnight conversion issues
+      const formatDateForDB = (dateStr: string | null) => {
+        if (!dateStr) return null;
+        return `${dateStr}T12:00:00`;
+      };
+
       const { error: insertError } = await supabase
         .from('contact_requests')
         .insert([{
@@ -143,10 +150,10 @@ export default function ContactForm({ locale, searchParams }: ContactFormProps) 
           destination: formData.destination || null,
           message: formData.message || null,
           status: 'pending',
-          // New quote fields
-          travel_date: formData.travel_date || null,
+          // New quote fields - format dates to avoid timezone issues
+          travel_date: formatDateForDB(formData.travel_date),
           departure_time: formData.departure_time || null,
-          return_date: formData.return_date || null,
+          return_date: formatDateForDB(formData.return_date),
           return_time: formData.return_time || null,
           departure_location: formData.departure_location || null,
           departure_location_other: formData.departure_location_other || null,

@@ -38,8 +38,9 @@ interface QuoteRequestData {
 function formatDate(dateString?: string): string {
   if (!dateString) return 'No especificada';
   // Parse date as local time to avoid timezone issues
-  // Input format: "2026-03-15" -> should display as March 15, not shifted by timezone
-  const [year, month, day] = dateString.split('-').map(Number);
+  // Input formats: "2026-03-15" or "2026-03-15T12:00:00"
+  const datePart = dateString.split('T')[0]; // Extract just the date part
+  const [year, month, day] = datePart.split('-').map(Number);
   const date = new Date(year, month - 1, day); // month is 0-indexed
   return date.toLocaleDateString('es-MX', {
     weekday: 'long',
