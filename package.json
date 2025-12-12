@@ -1,7 +1,7 @@
 {
   "name": "vuelatour",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vuelatour - Charter flights and air tours in Cancún and Riviera Maya, Mexico",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,7 @@
     "lint": "next lint"
   },
   "keywords": [],
-  "author": "",
+  "author": "EDDCODE",
   "license": "ISC",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
