@@ -211,7 +211,7 @@ export default function HeroCards({ locale, featuredTour, featuredDestination, h
       </div>
 
       {/* TripAdvisor Rating Widget - Fixed height to prevent CLS */}
-      <div className="card p-3 h-[56px]">
+      <div className="card p-3 h-[56px] hover:border-[rgb(var(--border))] hover:shadow-none">
         <TripAdvisorRatingWidget locale={locale} />
       </div>
     </div>

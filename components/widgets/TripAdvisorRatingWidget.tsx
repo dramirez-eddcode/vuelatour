@@ -41,15 +41,15 @@ export default function TripAdvisorRatingWidget({ locale = 'en' }: TripAdvisorRa
       href="https://www.tripadvisor.com/Attraction_Review-g150807-d12135503-Reviews-Vuelatour-Cancun_Yucatan_Peninsula.html"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-navy-800 transition-colors"
+      className="flex items-center gap-3 hover:opacity-80 transition-opacity"
     >
-      <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm">
+      <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm flex-shrink-0">
         <Image
           src="https://static.tacdn.com/img2/brand_refresh_2025/logos/logo.svg"
           alt="TripAdvisor"
-          width={28}
-          height={28}
-          className="w-7 h-7"
+          width={24}
+          height={24}
+          className="w-6 h-6"
         />
       </div>
       <div className="flex flex-col">
