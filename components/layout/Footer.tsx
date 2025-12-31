@@ -89,7 +89,7 @@ export default function Footer({ contactInfo }: FooterProps) {
           <div className="lg:col-span-1">
             <Link
               href={`/${locale}`}
-              className="inline-block mb-4"
+              className="inline-block mb-2"
               aria-label={locale === 'es' ? 'Vuelatour - Ir al inicio' : 'Vuelatour - Go to home'}
               title={locale === 'es' ? 'Vuelatour - Vuelos Privados y Tours Aéreos en Cancún' : 'Vuelatour - Charter Flights and Air Tours in Cancún'}
             >
@@ -104,6 +104,11 @@ export default function Footer({ contactInfo }: FooterProps) {
                 title={locale === 'es' ? 'Vuelatour' : 'Vuelatour'}
               />
             </Link>
+            {/* Tagline */}
+            <p className="text-sm italic mb-4">
+              <span className="text-gray-400">flying is </span>
+              <span className="text-brand-500">wonderful!</span>
+            </p>
             <p className="text-sm text-gray-400 mb-6 max-w-xs">
               {t('footer.description')} {getYearsOfExperienceFormatted()} {t('footer.yearsExperience')}.
             </p>
