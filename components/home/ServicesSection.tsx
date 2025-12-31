@@ -57,8 +57,38 @@ export default function ServicesSection({ locale, destinations, tours }: Service
   const hasMoreTours = tours.length > MAX_ITEMS;
 
   return (
-    <section id="services" className="py-20 md:py-28 bg-gradient-to-b from-transparent via-navy-50/30 to-transparent dark:via-navy-900/20 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="services" className="relative py-20 md:py-28 bg-gradient-to-b from-transparent via-navy-50/30 to-transparent dark:via-navy-900/20 scroll-mt-20 overflow-hidden">
+      {/* Decorative flight path - dashed curved line */}
+      <div className="absolute inset-0 pointer-events-none">
+        <svg
+          className="absolute w-full h-full"
+          viewBox="0 0 1200 800"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <path
+            d="M-100 100 C 150 50, 250 200, 400 150 S 550 50, 700 120 S 900 250, 1000 180 S 1150 80, 1300 150"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeDasharray="10 6"
+            strokeLinecap="round"
+            className="text-brand-500/30 dark:text-brand-500/20"
+            fill="none"
+          />
+          <path
+            d="M-50 700 C 200 650, 350 750, 500 680 S 700 600, 850 700 S 1000 750, 1150 650 S 1250 600, 1350 680"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeDasharray="10 6"
+            strokeLinecap="round"
+            className="text-brand-500/30 dark:text-brand-500/20"
+            fill="none"
+          />
+        </svg>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-14 md:mb-20">
           <span className="inline-block px-4 py-1.5 rounded-full text-sm font-medium bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-300 mb-4">
