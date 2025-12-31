@@ -60,7 +60,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-navy-900 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-white dark:bg-navy-900 transition-all duration-300 ${
         scrolled || mobileMenuOpen ? 'shadow-lg' : ''
       }`}
     >
@@ -74,7 +74,7 @@ export default function Header() {
             title={locale === 'es' ? 'Vuelatour - Vuelos Privados y Tours Aéreos en Cancún' : 'Vuelatour - Charter Flights and Air Tours in Cancún'}
           >
             <Image
-              src="/images/logo/vuelatour-logo.png"
+              src={darkMode ? '/images/logo/logo-vuelatour-dark.webp' : '/images/logo/logo-vuelatour.webp'}
               alt={locale === 'es'
                 ? 'Vuelatour - Logo de empresa de vuelos privados y tours aéreos en Cancún y Riviera Maya'
                 : 'Vuelatour - Charter flights and air tours company logo in Cancún and Riviera Maya'}
@@ -93,7 +93,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                 onClick={() => trackNavigation(link.label, 'header')}
               >
                 {link.label}
@@ -104,7 +104,7 @@ export default function Header() {
           {/* Right side actions */}
           <div className="flex items-center gap-2">
             {/* Language Switcher */}
-            <div className="hidden sm:flex items-center gap-1 p-1 rounded-lg bg-navy-800">
+            <div className="hidden sm:flex items-center gap-1 p-1 rounded-lg bg-gray-100 dark:bg-navy-800">
               {['es', 'en'].map((lang) => (
                 <button
                   key={lang}
@@ -112,7 +112,7 @@ export default function Header() {
                   className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
                     locale === lang
                       ? 'bg-brand-600 text-white'
-                      : 'text-gray-400 hover:text-white'
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white'
                   }`}
                 >
                   {lang.toUpperCase()}
@@ -123,7 +123,7 @@ export default function Header() {
             {/* Theme Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-navy-800 text-gray-300 hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-800 dark:text-gray-300 dark:hover:text-white transition-colors"
               aria-label={darkMode
                 ? (locale === 'es' ? 'Cambiar a modo claro' : 'Switch to light mode')
                 : (locale === 'es' ? 'Cambiar a modo oscuro' : 'Switch to dark mode')
@@ -148,7 +148,7 @@ export default function Header() {
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-navy-800 text-gray-300 hover:text-white transition-colors"
+              className="md:hidden p-2 rounded-lg bg-gray-100 text-gray-600 hover:text-gray-900 dark:bg-navy-800 dark:text-gray-300 dark:hover:text-white transition-colors"
               aria-label={mobileMenuOpen
                 ? (locale === 'es' ? 'Cerrar menú de navegación' : 'Close navigation menu')
                 : (locale === 'es' ? 'Abrir menú de navegación' : 'Open navigation menu')
@@ -166,13 +166,13 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-navy-800 animate-slide-down bg-navy-900">
+          <div className="md:hidden py-4 border-t border-gray-200 dark:border-navy-800 animate-slide-down bg-white dark:bg-navy-900">
             <nav className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-3 text-sm font-medium rounded-lg text-gray-200 hover:bg-navy-800 transition-colors"
+                  className="px-4 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-navy-800 transition-colors"
                   onClick={() => {
                     trackNavigation(link.label, 'header');
                     setMobileMenuOpen(false);
@@ -183,7 +183,7 @@ export default function Header() {
               ))}
 
               {/* Mobile Language */}
-              <div className="px-4 pt-4 mt-2 border-t border-navy-800">
+              <div className="px-4 pt-4 mt-2 border-t border-gray-200 dark:border-navy-800">
                 <div className="flex gap-2">
                   {['es', 'en'].map((lang) => (
                     <button
@@ -195,7 +195,7 @@ export default function Header() {
                       className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all ${
                         locale === lang
                           ? 'bg-brand-600 text-white'
-                          : 'bg-navy-800 text-gray-300'
+                          : 'bg-gray-100 text-gray-600 dark:bg-navy-800 dark:text-gray-300'
                       }`}
                     >
                       {lang === 'es' ? 'Español' : 'English'}

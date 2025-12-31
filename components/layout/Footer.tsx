@@ -94,7 +94,7 @@ export default function Footer({ contactInfo }: FooterProps) {
               title={locale === 'es' ? 'Vuelatour - Vuelos Privados y Tours Aéreos en Cancún' : 'Vuelatour - Charter Flights and Air Tours in Cancún'}
             >
               <Image
-                src="/images/logo/vuelatour-logo.png"
+                src="/images/logo/logo-vuelatour-dark.webp"
                 alt={locale === 'es'
                   ? 'Vuelatour - Logo de empresa de vuelos privados y tours aéreos en Cancún y Riviera Maya'
                   : 'Vuelatour - Charter flights and air tours company logo in Cancún and Riviera Maya'}

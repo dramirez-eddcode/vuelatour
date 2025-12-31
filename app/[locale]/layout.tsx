@@ -27,9 +27,9 @@ const locales = ['es', 'en'];
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.vuelatour.com'),
   icons: {
-    icon: '/images/logo/vuelatour-logo.png',
-    shortcut: '/images/logo/vuelatour-logo.png',
-    apple: '/images/logo/vuelatour-logo.png',
+    icon: '/images/logo/logo-vuelatour.webp',
+    shortcut: '/images/logo/logo-vuelatour.webp',
+    apple: '/images/logo/logo-vuelatour.webp',
   },
   other: {
     'msapplication-TileColor': '#102a43',

@@ -62,7 +62,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Image
-            src="/images/logo/vuelatour-logo.png"
+            src="/images/logo/logo-vuelatour-dark.webp"
             alt="Vuelatour - Panel de Administración"
             width={180}
             height={48}

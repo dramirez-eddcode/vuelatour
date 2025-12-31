@@ -33,8 +33,8 @@ export function LocalBusinessSchema({ locale, heroImageUrl, fleetImageUrl }: Loc
     logo: {
       '@type': 'ImageObject',
       '@id': 'https://vuelatour.com/#logo',
-      url: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
-      contentUrl: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
+      url: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
+      contentUrl: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
       caption: locale === 'es'
         ? 'Vuelatour - Vuelos privados y tours aéreos en Cancún y Riviera Maya'
         : 'Vuelatour - Charter flights and air tours in Cancún and Riviera Maya',
@@ -58,7 +58,7 @@ export function LocalBusinessSchema({ locale, heroImageUrl, fleetImageUrl }: Loc
     image: [
       {
         '@type': 'ImageObject',
-        url: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
+        url: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
         caption: locale === 'es' ? 'Logo de Vuelatour' : 'Vuelatour Logo',
         width: 150,
         height: 40,
@@ -238,18 +238,18 @@ export function OrganizationSchema({ locale }: OrganizationSchemaProps) {
     logo: {
       '@type': 'ImageObject',
       '@id': 'https://vuelatour.com/#logo',
-      url: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
-      contentUrl: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
+      url: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
+      contentUrl: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
       caption: locale === 'es'
         ? 'Vuelatour - Empresa de vuelos privados y tours aéreos en Cancún, México'
         : 'Vuelatour - Charter flights and air tours company in Cancún, Mexico',
       width: 150,
       height: 40,
-      encodingFormat: 'image/png',
+      encodingFormat: 'image/webp',
     },
     image: {
       '@type': 'ImageObject',
-      url: 'https://vuelatour.com/images/logo/vuelatour-logo.png',
+      url: 'https://vuelatour.com/images/logo/logo-vuelatour.webp',
       width: 150,
       height: 40,
     },

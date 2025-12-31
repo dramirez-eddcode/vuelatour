@@ -81,7 +81,8 @@ green-500: #22c55e    // Status indicators (available today badge)
 - Colors defined as CSS variables in `globals.css`
 
 ### Images & SEO
-- **Logo**: `public/images/logo/vuelatour-logo.png`
+- **Logo Light**: `public/images/logo/logo-vuelatour.webp` (gray text, for light theme)
+- **Logo Dark**: `public/images/logo/logo-vuelatour-dark.webp` (white text, for dark theme)
 - **Image Structure**: `public/images/{hero,destinations,tours,fleet,logo,og}/`
 - **Optimization**: Using `next/image` with lazy loading, blur placeholders
 - **SEO Schemas** (`components/seo/SchemaMarkup.tsx`):
