@@ -367,9 +367,24 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
           .eq('id', editingId);
 
         if (updateError) throw updateError;
-        setImages(images.map(img =>
-          img.id === editingId ? { ...img, ...formData } : img
-        ));
+
+        // Fetch the updated record to get fresh data including file_size
+        const { data: updatedImage } = await supabase
+          .from('site_images')
+          .select()
+          .eq('id', editingId)
+          .single();
+
+        if (updatedImage) {
+          setImages(images.map(img =>
+            img.id === editingId ? updatedImage : img
+          ));
+        } else {
+          // Fallback to local update if fetch fails
+          setImages(images.map(img =>
+            img.id === editingId ? { ...img, ...formData } : img
+          ));
+        }
       }
 
       handleCancel();
