@@ -191,9 +191,9 @@ const formatFileSize = (bytes: number | null | undefined): string => {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 };
 
-// Helper para determinar si una imagen es pesada (>100KB)
+// Helper para determinar si una imagen es pesada (>150KB)
 const isHeavyImage = (bytes: number | null | undefined): boolean => {
-  return bytes ? bytes > 100 * 1024 : false;
+  return bytes ? bytes > 150 * 1024 : false;
 };
 
 // Helper para extraer el path del Storage de una URL de Supabase
@@ -484,7 +484,7 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
                   </span>
                   {heavyImages.length > 0 && (
                     <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
-                      ⚠️ {heavyImages.length} pesada{heavyImages.length > 1 ? 's' : ''} (&gt;100KB)
+                      ⚠️ {heavyImages.length} pesada{heavyImages.length > 1 ? 's' : ''} (&gt;150KB)
                     </span>
                   )}
                   {config.hasCarousel && (
@@ -766,7 +766,7 @@ export default function ImagesContent({ user, images: initialImages }: ImagesCon
               <>
                 <span className="text-navy-600">•</span>
                 <span className="flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full bg-red-500/20 text-red-400 border border-red-500/30">
-                  ⚠️ {heavyImagesCount} pesada{heavyImagesCount > 1 ? 's' : ''} (&gt;100KB)
+                  ⚠️ {heavyImagesCount} pesada{heavyImagesCount > 1 ? 's' : ''} (&gt;150KB)
                 </span>
               </>
             )}
